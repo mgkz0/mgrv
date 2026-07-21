@@ -19,7 +19,7 @@ parameter reg [1:0] MACHINE = 2'b11;
 parameter reg [1:0] SUPERVISOR = 2'b01;
 parameter reg [1:0] USER = 2'b00;
 
-// REGFILE
+// regfile
 reg [31:0] rf [64];
 
 // MACHINE MODE
@@ -129,6 +129,20 @@ always @(posedge clk) begin
  end else begin
   if (we) begin
    rf[get_idx(wa)] <= wd;
+  end
+ end
+
+ if (wa != MCYCLE && wa != MCYCLEH && !csr_exc) begin
+  if (rf[get_idx(MCYCLE)] != 32'hFFFFFFFF) begin
+   rf[get_idx(MCYCLE)] <= rf[get_idx(MCYCLE)] + 1;
+  end else begin
+   rf[get_idx(MCYCLE)] <= 0;
+   if (rf[get_idx(MCYCLEH)] != 32'hFFFFFFFF) begin
+    rf[get_idx(MCYCLEH)] <= rf[get_idx(MCYCLEH)] + 1;
+   end else begin
+    rf[get_idx(MCYCLE)] <= 0;
+    rf[get_idx(MCYCLEH)] <= 0;
+   end
   end
  end
 end
