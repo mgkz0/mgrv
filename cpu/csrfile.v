@@ -1,4 +1,6 @@
 module csrfile(
+ input wire rst,
+
  input wire clk,
  input wire we,
  input wire [1:0] mode,
@@ -122,26 +124,34 @@ assign csr_exc = (mode < ra[9:8])
 | (we & !get_idx(wa))
 | (!get_idx(ra));
 
-always @(posedge clk) begin
- if (csr_exc) begin
-  rf[get_idx(MEPC)] <= pc;
-  rf[get_idx(MCAUSE)] <= mcause_in;
+always @(posedge clk or posedge rst) begin
+ if (rst) begin
+  rf[get_idx(MISA)] <= 32'h40141100;
+  rf[get_idx(MSTATUS)] <= 0;
+  rf[get_idx(MCAUSE)] <= 0;
+  rf[get_idx(MCYCLE)] <= 0;
+  rf[get_idx(MCYCLEH)] <= 0;
  end else begin
-  if (we) begin
-   rf[get_idx(wa)] <= wd;
-  end
- end
-
- if (wa != MCYCLE && wa != MCYCLEH && !csr_exc) begin
-  if (rf[get_idx(MCYCLE)] != 32'hFFFFFFFF) begin
-   rf[get_idx(MCYCLE)] <= rf[get_idx(MCYCLE)] + 1;
+  if (csr_exc) begin
+   rf[get_idx(MEPC)] <= pc;
+   rf[get_idx(MCAUSE)] <= mcause_in;
   end else begin
-   rf[get_idx(MCYCLE)] <= 0;
-   if (rf[get_idx(MCYCLEH)] != 32'hFFFFFFFF) begin
-    rf[get_idx(MCYCLEH)] <= rf[get_idx(MCYCLEH)] + 1;
+   if (we) begin
+    rf[get_idx(wa)] <= wd;
+   end
+  end
+
+  if (wa != MCYCLE && wa != MCYCLEH && !csr_exc) begin
+   if (rf[get_idx(MCYCLE)] != 32'hFFFFFFFF) begin
+    rf[get_idx(MCYCLE)] <= rf[get_idx(MCYCLE)] + 1;
    end else begin
     rf[get_idx(MCYCLE)] <= 0;
-    rf[get_idx(MCYCLEH)] <= 0;
+    if (rf[get_idx(MCYCLEH)] != 32'hFFFFFFFF) begin
+     rf[get_idx(MCYCLEH)] <= rf[get_idx(MCYCLEH)] + 1;
+    end else begin
+     rf[get_idx(MCYCLE)] <= 0;
+     rf[get_idx(MCYCLEH)] <= 0;
+    end
    end
   end
  end
