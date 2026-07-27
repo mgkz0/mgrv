@@ -43,10 +43,6 @@ parameter reg [11:0] MCYCLE  = 12'hB00;
 parameter reg [11:0] MCYCLEH = 12'hB80;
 
 // USER MODE
-// FLOATING-POINT REGS
-parameter reg [11:0] FFLAGS = 12'h001;
-parameter reg [11:0] FRM = 12'h002;
-parameter reg [11:0] FCSR = 12'h003;
 // COUNTER REGS
 parameter reg [11:0] CYCLE = 12'hC00;
 parameter reg [11:0] TIME = 12'hC01;
@@ -101,9 +97,6 @@ function automatic [5:0] get_idx;
    STVAL:       get_idx = 6'd27;
    SATP:        get_idx = 6'd28;
    // USER MODE
-   FFLAGS:      get_idx = 6'd10;
-   FRM:         get_idx = 6'd11;
-   FCSR:        get_idx = 6'd12;
    CYCLE:       get_idx = 6'd13;
    TIME:        get_idx = 6'd14;
    INSTRET:     get_idx = 6'd15;
@@ -126,7 +119,7 @@ assign csr_exc = (mode < ra[9:8])
 
 always @(posedge clk or posedge rst) begin
  if (rst) begin
-  rf[get_idx(MISA)] <= 32'h40141100;
+  rf[get_idx(MISA)] <= 32'h401410F8;
   rf[get_idx(MSTATUS)] <= 0;
   rf[get_idx(MCAUSE)] <= 0;
   rf[get_idx(MCYCLE)] <= 0;
