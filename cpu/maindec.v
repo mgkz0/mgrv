@@ -7,7 +7,8 @@ module maindec (
  output branch,
  output jump,
  output [1:0] resultvsrc,
- output [1:0] aluop
+ output [1:0] aluop,
+ output is_rv32m
 );
 
 reg [10:0] controls;
@@ -15,6 +16,8 @@ reg [10:0] controls;
 // Signal Mapping:
 // controls = {regwrite, alusrc, memwrite, branch, jump, resultvsrc[1:0], aluop[1:0]}
 assign {regwrite, alusrc, memwrite, branch, jump, resultvsrc, aluop} = controls;
+
+assign is_rv32m = (opcode == 7'b0110011) && (funct7 == 7'b0000001); 
 
 always @(*) begin
  case (op)
