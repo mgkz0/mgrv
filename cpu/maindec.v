@@ -6,9 +6,9 @@ module maindec (
  output memwrite,
  output branch,
  output jump,
+ output is_rv32m,
  output [1:0] resultvsrc,
- output [1:0] aluop,
- output is_rv32m
+ output [1:0] aluop
 );
 
 reg [10:0] controls;
