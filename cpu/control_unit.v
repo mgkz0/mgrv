@@ -9,11 +9,11 @@ module control_unit(
  output alusrc, 
  output memwrite, 
  output jump, 
- output pcsrc
+ output pcsrc,
+ output [1:0] resultvsrc
 );
 
 wire [1:0] aluop;
-wire [1:0] resultvsrc;
 wire is_rv32m;
 wire func7b5 = func7[5];
 wire branch;
