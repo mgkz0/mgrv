@@ -10,7 +10,8 @@ module control_unit(
  output memwrite, 
  output jump, 
  output pcsrc,
- output [1:0] resultvsrc
+ output [1:0] resultvsrc,
+ output [2:0] immcode
 );
 
 wire [1:0] aluop;
@@ -27,7 +28,8 @@ maindec md (
  jump, 
  is_rv32m, 
  resultvsrc, 
- aluop
+ aluop,
+ immcode
 );
 
 aludec ad (
