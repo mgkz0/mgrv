@@ -1,5 +1,5 @@
 module immgen(
- input [2:0] immgen,
+ input [2:0] immcode,
  input [31:0] instr,
 
  output [31:0] immediate
@@ -11,4 +11,15 @@ localparam B_TYPE = 3'b011;
 localparam J_TYPE = 3'b100;
 localparam U_TYPE = 3'b101;
 
+
+always @(*) begin
+ case (immcode)
+  I_TYPE: immediate = {{21{instr[31]}}, instr[30:20]};
+  S_TYPE: immediate = {{21{instr[31]}}, instr[30:25], instr[11:7]};
+  B_TYPE: immediate = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
+  J_TYPE: immediate = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
+  U_TYPE: immediate = {instr[31], instr[30:20], instr[19:12], {12{1'b0}}};
+  default: immediate = 32'd0;
+ endcase
+end
 endmodule
