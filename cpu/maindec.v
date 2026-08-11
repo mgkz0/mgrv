@@ -1,5 +1,6 @@
 module maindec (
  input [6:0] op,
+ input [6:0] func7,
 
  output regwrite,
  output alusrc,
@@ -24,7 +25,7 @@ localparam U_TYPE = 3'b101;
 // controls = {regwrite, alusrc, memwrite, branch, jump, resultvsrc[1:0], aluop[1:0]}
 assign {regwrite, alusrc, memwrite, branch, jump, resultvsrc, aluop} = controls;
 
-assign is_rv32m = (opcode == 7'b0110011) && (funct7 == 7'b0000001); 
+assign is_rv32m = (op == 7'b0110011) && (func7 == 7'b0000001); 
 
 always @(*) begin
  case (op)

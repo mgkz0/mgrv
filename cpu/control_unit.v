@@ -1,6 +1,6 @@
 module control_unit(
  input [6:0] opcode,
- input [5:0] func7,
+ input [6:0] func7,
  input [2:0] func3,
  input zero,
 
@@ -20,7 +20,8 @@ wire func7b5 = func7[5];
 wire branch;
 
 maindec md (
- op, 
+ op,
+ fync7,
  regwrite, 
  alusrc, 
  memwrite, 
