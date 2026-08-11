@@ -1,4 +1,6 @@
 module pcnextgen(
+ input clk,
+ input rst,
  input regwrite, alusrc, jump, pcsrc,
  input [31:0] pc,
  input [31:0] rd1, 
@@ -20,6 +22,6 @@ assign pcnextjalr = (rd1 + immediate) & ~32'h1;
 
 assign is_jalr = (regwrite & alusrc & jump);
 
-assign pcnext = is_jalr ? pcnextjalr : pcsrc ? pcnextbr : pcplus4;
+assign pcnext = is_jalr ? pcnextjalr : (jump | pcsrc) ? pcnextbr : pcplus4;
 
 endmodule

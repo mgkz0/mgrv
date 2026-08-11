@@ -14,7 +14,7 @@ module datapath(
  output wire zero
 );
 
-wire [31:0] pcnext, pcplus4, immediate;
+wire [31:0] immediate, pcnext;
 
 wire [31:0] rd1, rd2, wd3;
 
@@ -25,18 +25,21 @@ immgen ig(
  .immediate (immediate)
 );
 
-
 // NEXT PC LOGIC
-wire is_jalr = (regwrite & alusrc & jump);
-
-adder addnextpc(
- .a (pc), .b (32'b100), .y (pcplus4)
+pcnextgen pcng (
+ .regwrite (regwrite), 
+ .alusrc (alusrc), 
+ .jump (jump), 
+ .pcsrc (pcsrc),
+ .pc (pc), 
+ .rd1 (rd1), 
+ .immediate (immediate), 
+ .pcnext (pcnext), 
 );
 
-adder addnextpcjalr(
- .a (immediate), .b (instr[19:15])
+flopr #(32) pcprep (
+ clk, rst, pcnext, pc
 );
-
 
 // REGFILE LOGIC
 regfile rf(
