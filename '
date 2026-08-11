@@ -1,5 +1,0 @@
-module nextpcgen(
- input regwrite, alusrc, jump, pcsrc,
- input [31:0] rd1, 
-);
-endmodule
