@@ -17,8 +17,9 @@ module datapath(
 wire [31:0] immediate, pcnext;
 
 wire [31:0] rd1, rd2, wd3;
+wire [31:0] srcb;
 
-// IMMEDIATE GENERATION LOGIC
+// SIGN IMMEDIATE GENERATION LOGIC
 immgen ig(
  .immcode (immcode),
  .instr (instr),
@@ -42,7 +43,7 @@ flopr #(32) pcprep (
 );
 
 // REGFILE LOGIC
-regfile rf(
+regfile rf (
  .clk (clk),
  .we3 (regwrite),
  .ra1 (instr[19:15]),
@@ -51,6 +52,19 @@ regfile rf(
  .wd3 (wd3),
  .rd1 (rd1),
  .rd2 (rd2),
+);
+
+// ALU LOGIC
+mux srcbmux (
+ rd2, immediate, alusrc, srcb
+);
+
+alu alu (
+ .opcode (alucode),
+ .a (rd1),
+ .b (srcb),
+ .y (aluout),
+ .zero (zero)
 );
 
 endmodule
