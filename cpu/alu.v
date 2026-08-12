@@ -2,7 +2,8 @@ module alu(
  input wire [4:0] opcode,
  input wire [31:0] a, b,
 
- output wire [31:0] y
+ output wire [31:0] y,
+ output wire zero
 );
 
 // DEFAULT OPS
@@ -106,6 +107,7 @@ always @(*) begin
  endcase
 end
 
+assign zero = (res == 32'b0);
 assign y = res;
 
 endmodule
