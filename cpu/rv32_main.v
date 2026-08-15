@@ -30,7 +30,6 @@ control_unit cu (
  .pcsrc (pcsrc),
  .resultvsrc (resultvsrc),
  .immcode (immcode)
-
 );
 
 datapath dp (
