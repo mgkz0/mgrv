@@ -35,7 +35,7 @@ pcnextgen pcng (
  .pc (pc), 
  .rd1 (rd1), 
  .immediate (immediate), 
- .pcnext (pcnext), 
+ .pcnext (pcnext) 
 );
 
 flopr #(32) pcprep (
@@ -51,8 +51,14 @@ regfile rf (
  .wa3 (instr[11:7]),
  .wd3 (wd3),
  .rd1 (rd1),
- .rd2 (rd2),
+ .rd2 (rd2)
 );
+
+assign writedata = rd2;
+
+assign wd3 = (resultvsrc == 2'b00) ? aluout :
+ (resultvsrc == 2'b01) ? readdata :
+ (pc + 32'd4);
 
 // ALU LOGIC
 mux srcbmux (
