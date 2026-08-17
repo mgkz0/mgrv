@@ -1,4 +1,4 @@
-module alu_decoder(
+module aludec(
  input [1:0] aluop,
  input [2:0] func3,
  input func7b5,

@@ -61,7 +61,7 @@ assign wd3 = (resultvsrc == 2'b00) ? aluout :
  (pc + 32'd4);
 
 // ALU LOGIC
-mux srcbmux (
+mux2 #(32) srcbmux (
  rd2, immediate, alusrc, srcb
 );
 

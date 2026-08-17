@@ -20,8 +20,8 @@ wire func7b5 = func7[5];
 wire branch;
 
 maindec md (
- op,
- fync7,
+ opcode,
+ func7,
  regwrite, 
  alusrc, 
  memwrite, 

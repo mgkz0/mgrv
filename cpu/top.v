@@ -5,9 +5,9 @@ module top(
  output d_memwrite,
  output [31:0] writedata, d_memaddr
 );
-
+/* verilator lint_off UNUSEDSIGNAL */
 wire [31:0] pc, readdata, r_instr;
-
+/* verilator lint_on UNUSEDSIGNAL */
 rv32_main cpu(
  .clk (clk),
  .rst (rst), 

@@ -1,21 +1,20 @@
-`timescale 1ns/1ps
-
 module tb_top;
 
 reg rst, clk;
 
-reg i_memwrite, d_memwrite;
+wire d_memwrite;
 
-reg [31:0] w_instr, writedata, d_memaddr; 
+reg [31:0] writedata;
+wire [31:0] d_memaddr; 
 
 top dut(
  .clk (clk),
  .rst (rst),
- .i_memwrite (i_memwrite),
- .w_instr (w_instr),
+ .i_memwrite (1'b0),
+ .w_instr (32'b0),
  .d_memwrite (d_memwrite),
  .writedata (writedata),
- d_memaddr (d_memaddr)
+ .d_memaddr (d_memaddr)
 );
 
 always begin
@@ -26,14 +25,14 @@ always begin
 end
 
 initial begin
- $readmemh("./memfile.hex", dut.imem256kb.mem);
- rst <= 1;
+ $readmemh("cpu/memfile.hex", dut.imem256kb.mem);
+ rst = 1;
  #22;
- rst <= 0;
+ rst = 0;
 end
 
 always @(negedge clk) begin
- if (d_memaddr) begin
+ if (d_memwrite) begin
   if (d_memaddr == 32'd84 && writedata == 32'd25) begin
    $display("Simulation passed!");
    $stop;
