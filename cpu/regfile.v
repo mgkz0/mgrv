@@ -7,15 +7,15 @@ module regfile(
  output wire [31:0] rd1, rd2
 );
 
-reg [31:0] rf [32];
+reg [31:0] gprs [32];
 
 always @(posedge clk) begin
  if (we3) begin
-  rf[wa3] <= wd3;
+  gprs[wa3] <= wd3;
  end
 end
 
-assign rd1 = (ra1 != 0) ? rf[ra1] : 0;
-assign rd2 = (ra2 != 0) ? rf[ra2] : 0;
+assign rd1 = (ra1 != 0) ? gprs[ra1] : 0;
+assign rd2 = (ra2 != 0) ? gprs[ra2] : 0;
 
 endmodule

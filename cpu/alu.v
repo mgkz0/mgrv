@@ -28,9 +28,11 @@ localparam ALU_DIVU   = 5'b01111;
 localparam ALU_REM    = 5'b10000;
 localparam ALU_REMU   = 5'b10001;
 
+/* verilator lint_off UNUSEDSIGNAL */
 wire [63:0] sign_prod = $signed(a) * $signed(b);
 wire [63:0] unsign_prod = a * b;
 wire [63:0] multi_sign_prod = $signed(a) * $signed({1'b0, b});
+/* verilator lint_on UNUSEDSIGNAL */
 
 wire is_zero = (b == 32'b0);
 wire is_overflow = (a == 32'h8000_0000) && (b == 32'hFFFF_FFFF);

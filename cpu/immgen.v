@@ -1,8 +1,10 @@
 module immgen(
  input [2:0] immcode,
+ /* verilator lint_off UNUSEDSIGNAL */
  input [31:0] instr,
+ /* verilator lint_on UNUSEDSIGNAL */
 
- output [31:0] immediate
+ output reg [31:0] immediate
 );
 
 localparam I_TYPE = 3'b001;

@@ -1,6 +1,4 @@
 module pcnextgen(
- input clk,
- input rst,
  input regwrite, alusrc, jump, pcsrc,
  input [31:0] pc,
  input [31:0] rd1, 
