@@ -1,6 +1,7 @@
 module aludec(
  input [1:0] aluop,
  input [2:0] func3,
+ input opcode5,
  input func7b5,
  input is_rv32m,
 
@@ -50,7 +51,7 @@ always @(*) begin
     endcase
    end else begin
     case (func3)
-     3'b000: alucode = func7b5 ? ALU_SUB : ALU_ADD;
+     3'b000: alucode = (func7b5 & opcode5) ? ALU_SUB : ALU_ADD;
      3'b001: alucode = ALU_SLL;
      3'b010: alucode = ALU_SLT;
      3'b011: alucode = ALU_SLTU;
