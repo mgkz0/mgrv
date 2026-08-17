@@ -1,11 +1,13 @@
 module tb_top;
 
 reg rst, clk;
-
 wire d_memwrite;
-
-reg [31:0] writedata;
+wire [31:0] writedata;
 wire [31:0] d_memaddr; 
+
+// Success conditions
+localparam SUCCESS_ADDR = 32'd128;
+localparam SUCCESS_VAL  = 32'd256; 
 
 top dut(
  .clk (clk),
@@ -17,30 +19,39 @@ top dut(
  .d_memaddr (d_memaddr)
 );
 
+// Clock Generation
 always begin
- clk = 1;
- #5;
- clk = 0;
- #5;
+ clk = 1; #5;
+ clk = 0; #5;
 end
 
 initial begin
+ // 1. Load instructions into Instruction Memory
  $readmemh("cpu/memfile.hex", dut.imem256kb.mem);
- rst = 1;
- #22;
+ 
+ // 2. Reset Sequence
+ rst = 1; #22;
  rst = 0;
+
+ // 3. Timeout Safety
+ #2000;
+ $display("Simulation timed out! Hardware is likely stuck.");
+ $finish;
 end
 
 always @(negedge clk) begin
+ //$display("TIME: %t | Write - Addr: %d | Data: %d", $time, d_memaddr, $signed(writedata)); 
  if (d_memwrite) begin
-  if (d_memaddr == 32'd84 && writedata == 32'd25) begin
-   $display("Simulation passed!");
-   $stop;
-  end else begin
-   $display("Simulation failed!");
-   $stop;
+  $display("TIME: %t | Write - Addr: %d | Data: %d", $time, d_memaddr, $signed(writedata)); 
+  if (d_memaddr == SUCCESS_ADDR) begin 
+   if (writedata == SUCCESS_VAL) begin 
+    $display("Simulation passed! RV32IM support verified.");
+    $finish;
+   end else begin
+    $display("Simulation failed! Got %d, expected %d", $signed(writedata), SUCCESS_VAL);
+    $finish;
+   end
   end
  end
 end
-
 endmodule

@@ -17,6 +17,7 @@ module control_unit(
 wire [1:0] aluop;
 wire is_rv32m;
 wire func7b5 = func7[5];
+wire opcode5 = opcode[5];
 wire branch;
 
 maindec md (
@@ -35,8 +36,9 @@ maindec md (
 
 aludec ad (
  aluop, 
- func3, 
- func7b5, 
+ func3,
+ opcode5,
+ func7b5,
  is_rv32m, 
  alucode
 );
