@@ -22,7 +22,7 @@ localparam J_TYPE = 3'b100;
 localparam U_TYPE = 3'b101;
 
 // Signal Mapping:
-// controls = {regwrite, alusrc, memwrite, branch, jump, resultvsrc[1:0], aluop[1:0]}
+// controls = {regwrite, alusrc, memwrite, branch, jump, resultvsrc[1:0] (for mux result), aluop[1:0]}
 assign {regwrite, alusrc, memwrite, branch, jump, resultvsrc, aluop} = controls;
 
 assign is_rv32m = (opcode == 7'b0110011) && (func7 == 7'b0000001); 
