@@ -44,6 +44,7 @@ datapath dp (
  .resultvsrc (resultvsrc),
  .alucode (alucode),
  .immcode (immcode),
+ .loadcode (instr[14:12]),
  .pc (pc),
  .writedata (writedata),
  .aluout (aluout),
