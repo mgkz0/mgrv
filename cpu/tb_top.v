@@ -40,9 +40,10 @@ initial begin
 end
 
 always @(negedge clk) begin
- //$display("TIME: %t | Write - Addr: %d | Data: %d", $time, d_memaddr, $signed(writedata)); 
+ //$display("TIME: %t | Write - Addr: %d | Data: %d", $time, d_memaddr, $signed(writedata));
+ $display("TIME: %t | PC: %h | d_memwrite: %b | d_memaddr: %d | writedata: %d",
+ $time, dut.pc, d_memwrite, d_memaddr, $signed(writedata)); 
  if (d_memwrite) begin
-  $display("TIME: %t | Write - Addr: %d | Data: %d", $time, d_memaddr, $signed(writedata)); 
   if (d_memaddr == SUCCESS_ADDR) begin 
    if (writedata == SUCCESS_VAL) begin 
     $display("Simulation passed! RV32IM support verified.");
