@@ -1,7 +1,7 @@
 module mux4(
  input [WIDTH-1:0] d0, d1, d2, d3,
  input [1:0] s,
- output [WIDTH-1:0] y
+ output reg [WIDTH-1:0] y
 );
 parameter WIDTH = 8;
 always @(*) begin

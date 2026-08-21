@@ -7,6 +7,7 @@ module top(
 );
 /* verilator lint_off UNUSEDSIGNAL */
 wire [31:0] pc, readdata, r_instr;
+wire [3:0] wstrb;
 /* verilator lint_on UNUSEDSIGNAL */
 rv32_main cpu(
  .clk (clk),
@@ -16,12 +17,13 @@ rv32_main cpu(
  .memwrite (d_memwrite),
  .pc (pc),
  .writedata (writedata),
- .aluout (d_memaddr)
+ .aluout (d_memaddr),
+ .wstrb (wstrb)
 );
 
 ram #(
  .ADDR_WIDTH(16), .DATA_WIDTH(32)
-) imem256kb (
+) imem (
  .clk (clk),
  .we (i_memwrite),
  .a (pc[17:2]),
@@ -29,13 +31,14 @@ ram #(
  .rd (r_instr)
 );
 
-ram #(
- .ADDR_WIDTH(18), .DATA_WIDTH(32)
-) dmem1mb (
+dataram32 #(
+ .ADDR_WIDTH(18)
+) dmem (
  .clk (clk),
  .we (d_memwrite),
  .a (d_memaddr[19:2]),
  .wd (writedata),
- .rd (readdata)
+ .rd (readdata),
+ .wstrb (wstrb)
 ); 
 endmodule
