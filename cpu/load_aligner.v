@@ -6,8 +6,8 @@ module load_aligner(
  output [31:0] aligned
 );
 
-wire hd [15:0];
-wire bd [7:0];
+wire [15:0] hd;
+wire [15:0] bd;
 
 localparam LW  = 3'b001;
 localparam LH  = 3'b010;
