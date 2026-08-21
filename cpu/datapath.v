@@ -6,11 +6,12 @@ module datapath(
  input wire [31:0] instr,
  input wire [1:0] resultvsrc,
  input wire [4:0] alucode,
- input wire [2:0] immcode, loadcode,
+ input wire [2:0] immcode, func3,
 
  output wire [31:0] pc,
  output wire [31:0] writedata,
  output wire [31:0] aluout,
+ output wire [3:0] wstrb,
  output wire zero
 );
 
@@ -54,12 +55,6 @@ regfile rf (
  .rd2 (rd2)
 );
 
-assign writedata = rd2;
-
-assign wd3 = (resultvsrc == 2'b00) ? aluout :
- (resultvsrc == 2'b01) ? loaddata :
- (pc + 32'd4);
-
 // ALU LOGIC
 mux2 #(32) srcbmux (
  rd2, immediate, alusrc, srcb
@@ -73,12 +68,25 @@ alu alu (
  .zero (zero)
 );
 
-// LOAD INSTRUCTIONS ALIGN LOGIC
+// LOAD & STORE INSTRUCTIONS ALIGN LOGIC
 
-load_aligned la (
+load_aligner la (
  .rd (readdata),
  .offset (aluout[1:0]),
- .loadcode (loadcode),
+ .loadcode (func3),
  .aligned (loaddata)
 );
+
+store_aligner sa (
+ .storecode (func3),
+ .wd (rd2),
+ .offset (aluout[1:0]),
+ .wstrb (wstrb),
+ .aligned (writedata)
+);
+
+assign wd3 = (resultvsrc == 2'b00) ? aluout :
+ (resultvsrc == 2'b01) ? loaddata :
+ (pc + 32'd4);
+
 endmodule

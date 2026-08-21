@@ -7,7 +7,8 @@ module rv32_main(
  output wire memwrite,
  output wire [31:0] pc,
  output wire [31:0] writedata,
- output wire [31:0] aluout
+ output wire [31:0] aluout,
+ output wire [3:0] wstrb
 );
 
 wire regwrite, alusrc, jump, pcsrc, zero;
@@ -44,10 +45,11 @@ datapath dp (
  .resultvsrc (resultvsrc),
  .alucode (alucode),
  .immcode (immcode),
- .loadcode (instr[14:12]),
+ .func3 (instr[14:12]),
  .pc (pc),
  .writedata (writedata),
  .aluout (aluout),
+ .wstrb (wstrb),
  .zero (zero)
 );
 
