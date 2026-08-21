@@ -18,11 +18,9 @@ module csrfile(
 
 // MODES
 parameter reg [1:0] MACHINE = 2'b11;
-parameter reg [1:0] SUPERVISOR = 2'b01;
-parameter reg [1:0] USER = 2'b00;
 
 // regfile
-reg [31:0] rf [64];
+reg [31:0] rf [16];
 
 // MACHINE MODE
 parameter reg [11:0] MISA = 12'h301;
@@ -31,7 +29,6 @@ parameter reg [11:0] MVENDORID = 12'hF11;
 parameter reg [11:0] MARCHID = 12'hF12;
 parameter reg [11:0] MIMPID = 12'hF13;
 parameter reg [11:0] MHARTID = 12'hF14;
-parameter reg [11:0] MCONFIGPTR = 12'hF15;
 // STATE REGS
 parameter reg [11:0] MSTATUS = 12'h300;
 parameter reg [11:0] MSTATUSH = 12'h310;
@@ -42,70 +39,28 @@ parameter reg [11:0] MEPC   = 12'h341;
 parameter reg [11:0] MCYCLE  = 12'hB00;
 parameter reg [11:0] MCYCLEH = 12'hB80;
 
-// USER MODE
-// COUNTER REGS
-parameter reg [11:0] CYCLE = 12'hC00;
-parameter reg [11:0] TIME = 12'hC01;
-parameter reg [11:0] INSTRET = 12'hC02;
-// RV32 COUNTER REGS
-parameter reg [11:0] CYCLEH = 12'hC80;
-parameter reg [11:0] TIMEH = 12'hC81;
-parameter reg [11:0] INSTRETH = 12'hC82;
 
-// SUPERVISOR MODE
-// STATE REGS
-parameter reg [11:0] SSTATUS = 12'h100;
-parameter reg [11:0] STVEC = 12'h105;
-parameter reg [11:0] SIE = 12'h104;
-parameter reg [11:0] SIP = 12'h144;
-parameter reg [11:0] SCOUNTEREN = 12'h106;
-parameter reg [11:0] SSCRATCH = 12'h140;
-parameter reg [11:0] SEPC = 12'h141;
-parameter reg [11:0] SCAUSE = 12'h142;
-parameter reg [11:0] STVAL = 12'h143;
-// MMU REGS
-parameter reg [11:0] SATP = 12'h180;
+localparam MISA_STATE = 32'h401410F8;
 
-
-function automatic [5:0] get_idx;
+function automatic [3:0] get_idx;
  input [11:0] addr;
  begin
   case (addr)
    // MACHINE MODE
-   MISA:        get_idx = 6'd32;
-   MVENDORID:   get_idx = 6'd1;
-   MARCHID:     get_idx = 6'd2;
-   MIMPID:      get_idx = 6'd3;
-   MHARTID:     get_idx = 6'd4;
-   MCONFIGPTR:  get_idx = 6'd5;
-   MSTATUS:     get_idx = 6'd6;
-   MSTATUSH:    get_idx = 6'd7;
-   MTVEC:       get_idx = 6'd8;
-   MCAUSE:      get_idx = 6'd9;
-   MEPC:        get_idx = 6'd29;
-   MCYCLE:      get_idx = 6'd30;
-   MCYCLEH:     get_idx = 6'd31;
-   // SUPERVISOR MODE
-   SSTATUS:     get_idx = 6'd19;
-   STVEC:       get_idx = 6'd20;
-   SIE:         get_idx = 6'd21;
-   SIP:         get_idx = 6'd22;
-   SCOUNTEREN:  get_idx = 6'd23;
-   SSCRATCH:    get_idx = 6'd24;
-   SEPC:        get_idx = 6'd25;
-   SCAUSE:      get_idx = 6'd26;
-   STVAL:       get_idx = 6'd27;
-   SATP:        get_idx = 6'd28;
-   // USER MODE
-   CYCLE:       get_idx = 6'd13;
-   TIME:        get_idx = 6'd14;
-   INSTRET:     get_idx = 6'd15;
-   CYCLEH:      get_idx = 6'd16;
-   TIMEH:       get_idx = 6'd17;
-   INSTRETH:    get_idx = 6'd18;
-
+   MISA:        get_idx = 4'd1;
+   MVENDORID:   get_idx = 4'd2;
+   MARCHID:     get_idx = 4'd3;
+   MIMPID:      get_idx = 4'd4;
+   MHARTID:     get_idx = 4'd5;
+   MSTATUS:     get_idx = 4'd6;
+   MSTATUSH:    get_idx = 4'd7;
+   MTVEC:       get_idx = 4'd8;
+   MCAUSE:      get_idx = 4'd9;
+   MEPC:        get_idx = 4'd10;
+   MCYCLE:      get_idx = 4'd11;
+   MCYCLEH:     get_idx = 4'd12;
    // DEFAULT (ZERO FOR EXCEPTION)
-   default:     get_idx = 6'd0;
+   default:     get_idx = 4'd0;
   endcase
  end
 endfunction
@@ -119,11 +74,11 @@ assign csr_exc = (mode < ra[9:8])
 
 always @(posedge clk or posedge rst) begin
  if (rst) begin
-  rf[get_idx(MISA)] <= 32'h401410F8;
-  rf[get_idx(MSTATUS)] <= 0;
-  rf[get_idx(MCAUSE)] <= 0;
-  rf[get_idx(MCYCLE)] <= 0;
-  rf[get_idx(MCYCLEH)] <= 0;
+  for (i = 0; i < 16; i = i + 1)
+   rf[i] <= 32'b0;
+
+  rf[get_idx(MISA)] <= MISA_STATE;
+  
  end else begin
   if (csr_exc) begin
    rf[get_idx(MEPC)] <= pc;
