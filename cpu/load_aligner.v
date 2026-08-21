@@ -3,11 +3,11 @@ module load_aligner(
  input [1:0] offset,
  input [2:0] loadcode,
 
- output [31:0] aligned
+ output reg [31:0] aligned
 );
 
 wire [15:0] hd;
-wire [15:0] bd;
+wire [7:0] bd;
 
 localparam LW  = 3'b001;
 localparam LH  = 3'b010;

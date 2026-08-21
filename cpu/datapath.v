@@ -6,7 +6,7 @@ module datapath(
  input wire [31:0] instr,
  input wire [1:0] resultvsrc,
  input wire [4:0] alucode,
- input wire [2:0] immcode, func3,
+ input wire [2:0] immcode,
 
  output wire [31:0] pc,
  output wire [31:0] writedata,
@@ -73,12 +73,12 @@ alu alu (
 load_aligner la (
  .rd (readdata),
  .offset (aluout[1:0]),
- .loadcode (func3),
+ .loadcode (instr[14:12]),
  .aligned (loaddata)
 );
 
 store_aligner sa (
- .storecode (func3),
+ .storecode (instr[14:12]),
  .wd (rd2),
  .offset (aluout[1:0]),
  .wstrb (wstrb),

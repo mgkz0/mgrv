@@ -27,7 +27,7 @@ end
 
 initial begin
  // 1. Load instructions into Instruction Memory
- $readmemh("cpu/memfile.hex", dut.imem256kb.mem);
+ $readmemh("cpu/memfile.hex", dut.imem.mem);
  
  // 2. Reset Sequence
  rst = 1; #22;

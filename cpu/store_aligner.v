@@ -3,8 +3,8 @@ module store_aligner(
  input [31:0] wd,
  input [1:0] offset,
 
- output [3:0] wstrb,
- output [31:0] aligned
+ output reg [3:0] wstrb,
+ output reg [31:0] aligned
 );
 
 wire [3:0] wstrb_h, wstrb_b;
