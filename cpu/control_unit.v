@@ -1,48 +1,48 @@
-module control_unit(
- input [6:0] opcode,
- input [6:0] func7,
- input [2:0] func3,
- input [4:0] rd,
- input zero,
+module control_unit (
+    input [6:0] opcode,
+    input [6:0] func7,
+    input [2:0] func3,
+    input [4:0] rd,
+    input zero,
 
- output [4:0] alucode,
- output regwrite, 
- output alusrc, 
- output memwrite, 
- output jump, 
- output pcsrc,
- output [1:0] resultvsrc,
- output [2:0] immcode
+    output [4:0] alucode,
+    output regwrite,
+    output alusrc,
+    output memwrite,
+    output jump,
+    output pcsrc,
+    output [1:0] resultvsrc,
+    output [2:0] immcode
 );
 
-wire [1:0] aluop;
-wire is_rv32m;
-wire func7b5 = func7[5];
-wire opcode5 = opcode[5];
-wire branch;
+  wire [1:0] aluop;
+  wire is_rv32m;
+  wire func7b5 = func7[5];
+  wire opcode5 = opcode[5];
+  wire branch;
 
-maindec md (
- opcode,
- func7,
- regwrite, 
- alusrc, 
- memwrite, 
- branch, 
- jump, 
- is_rv32m, 
- resultvsrc, 
- aluop,
- immcode
-);
+  maindec md (
+      opcode,
+      func7,
+      regwrite,
+      alusrc,
+      memwrite,
+      branch,
+      jump,
+      is_rv32m,
+      resultvsrc,
+      aluop,
+      immcode
+  );
 
-aludec ad (
- aluop, 
- func3,
- opcode5,
- func7b5,
- is_rv32m, 
- alucode
-);
+  aludec ad (
+      aluop,
+      func3,
+      opcode5,
+      func7b5,
+      is_rv32m,
+      alucode
+  );
 
-assign pcsrc = (branch && zero);
+  assign pcsrc = (branch && zero);
 endmodule
