@@ -15,10 +15,6 @@ module csrfile(
  output wire csr_exc,
  output wire [31:0] mtvec_out
 );
-
-// MODES
-parameter reg [1:0] MACHINE = 2'b11;
-
 // regfile
 reg [31:0] rf [16];
 
@@ -31,7 +27,6 @@ parameter reg [11:0] MIMPID = 12'hF13;
 parameter reg [11:0] MHARTID = 12'hF14;
 // STATE REGS
 parameter reg [11:0] MSTATUS = 12'h300;
-parameter reg [11:0] MSTATUSH = 12'h310;
 parameter reg [11:0] MTVEC = 12'h305;
 parameter reg [11:0] MCAUSE = 12'h342;
 parameter reg [11:0] MEPC   = 12'h341;
@@ -41,6 +36,7 @@ parameter reg [11:0] MCYCLEH = 12'hB80;
 
 
 localparam MISA_STATE = 32'h401410F8;
+localparam MSTATUS_STATE = 32'h0000_1800; 
 
 function automatic [3:0] get_idx;
  input [11:0] addr;
@@ -53,12 +49,11 @@ function automatic [3:0] get_idx;
    MIMPID:      get_idx = 4'd4;
    MHARTID:     get_idx = 4'd5;
    MSTATUS:     get_idx = 4'd6;
-   MSTATUSH:    get_idx = 4'd7;
-   MTVEC:       get_idx = 4'd8;
-   MCAUSE:      get_idx = 4'd9;
-   MEPC:        get_idx = 4'd10;
-   MCYCLE:      get_idx = 4'd11;
-   MCYCLEH:     get_idx = 4'd12;
+   MTVEC:       get_idx = 4'd7;
+   MCAUSE:      get_idx = 4'd8;
+   MEPC:        get_idx = 4'd9;
+   MCYCLE:      get_idx = 4'd10;
+   MCYCLEH:     get_idx = 4'd11;
    // DEFAULT (ZERO FOR EXCEPTION)
    default:     get_idx = 4'd0;
   endcase
@@ -76,8 +71,8 @@ always @(posedge clk or posedge rst) begin
  if (rst) begin
   for (i = 0; i < 16; i = i + 1)
    rf[i] <= 32'b0;
-
   rf[get_idx(MISA)] <= MISA_STATE;
+  rf[get_idx(MSTATUS)] <= MSTATUS_STATE;
   
  end else begin
   if (csr_exc) begin
@@ -88,7 +83,6 @@ always @(posedge clk or posedge rst) begin
     rf[get_idx(wa)] <= wd;
    end
   end
-
   if (wa != MCYCLE && wa != MCYCLEH && !csr_exc) begin
    if (rf[get_idx(MCYCLE)] != 32'hFFFFFFFF) begin
     rf[get_idx(MCYCLE)] <= rf[get_idx(MCYCLE)] + 1;

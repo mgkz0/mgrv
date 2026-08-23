@@ -2,6 +2,7 @@ module control_unit(
  input [6:0] opcode,
  input [6:0] func7,
  input [2:0] func3,
+ input [4:0] rd,
  input zero,
 
  output [4:0] alucode,
