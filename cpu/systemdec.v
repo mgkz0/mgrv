@@ -2,7 +2,7 @@ module systemdec (
     input is_system,
     input [31:0] instr,
 
-    output csrregwrite,
+    output regwrite,
     output csrwrite,
     output csrread,
     output [3:0] systemcode
@@ -19,7 +19,7 @@ module systemdec (
   assign is_rd = (instr[11:7] != 5'd0);
   assign is_rs1 = (instr[19:15] != 5'd0);
 
-  assign csrregwrite = is_csr && is_rd;
+  assign regwrite = is_csr && is_rd;
 
   // Signal Mapping:
   // controls = {csrread, csrwrite, systemcode[3:0]}

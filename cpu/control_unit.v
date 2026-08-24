@@ -1,8 +1,5 @@
 module control_unit (
-    input [6:0] opcode,
-    input [6:0] func7,
-    input [2:0] func3,
-    input [4:0] rd,
+    input [31:0] instr,
     input zero,
 
     output [4:0] alucode,
@@ -12,37 +9,55 @@ module control_unit (
     output jump,
     output pcsrc,
     output [1:0] resultvsrc,
-    output [2:0] immcode
-);
+    output [2:0] immcode,
 
+    output [3:0] systemcode,
+    output csrread,
+    output csrwrite
+);
   wire [1:0] aluop;
   wire is_rv32m;
-  wire func7b5 = func7[5];
-  wire opcode5 = opcode[5];
+  wire func7b5 = instr[31:25][5];
+  wire opcode5 = instr[6:0][5];
   wire branch;
+  wire gregwrite;
+
+  wire is_system;
+  wire csrregwrite;
 
   maindec md (
-      opcode,
-      func7,
-      regwrite,
-      alusrc,
-      memwrite,
-      branch,
-      jump,
-      is_rv32m,
-      resultvsrc,
-      aluop,
-      immcode
+      .opcode(instr[6:0]),
+      .func7(instr[31:25]),
+      .regwrite(gregwrite),
+      .alusrc(alusrc),
+      .memwrite(memwrite),
+      .branch(branch),
+      .jump(jump),
+      .is_rv32m(is_rv32m),
+      .resultvsrc(resultvsrc),
+      .aluop(aluop),
+      .immcode(immcode),
+      .is_system(is_system)
   );
 
   aludec ad (
-      aluop,
-      func3,
-      opcode5,
-      func7b5,
-      is_rv32m,
-      alucode
+      .aluop(aluop),
+      .func3(instr[14:12]),
+      .opcode5(opcode5),
+      .func7b5(func7b5),
+      .is_rv32m(is_rv32m),
+      .alucode(alucode)
   );
 
+  systemdec sd (
+      .is_system(is_system),
+      .instr(instr),
+      .regwrite(csrregwrite),
+      .csrwrite(csrwrite),
+      .csrread(csrread),
+      .systemcode(systemcode)
+  );
+
+  assign regwrite = (gregwrite || csrregwrite);
   assign pcsrc = (branch && zero);
 endmodule

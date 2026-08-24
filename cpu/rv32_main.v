@@ -13,16 +13,15 @@ module rv32_main (
 );
 
   wire regwrite, alusrc, jump, pcsrc, zero;
+  wire csrread, csrwrite;
 
   wire [1:0] resultvsrc;
   wire [2:0] immcode;
   wire [4:0] alucode;
-
+  wire [3:0] systemcode;
 
   control_unit cu (
-      .opcode(instr[6:0]),
-      .func7(instr[31:25]),
-      .func3(instr[14:12]),
+      .instr(instr),
       .zero(zero),
       .alucode(alucode),
       .regwrite(regwrite),
@@ -31,7 +30,10 @@ module rv32_main (
       .jump(jump),
       .pcsrc(pcsrc),
       .resultvsrc(resultvsrc),
-      .immcode(immcode)
+      .immcode(immcode),
+      .systemcode(systemcode),
+      .csrread(csrread),
+      .csrwrite(csrwrite)
   );
 
   datapath dp (
