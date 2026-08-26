@@ -1,6 +1,6 @@
 module rv32_main (
     input wire clk,
-    rst,
+    input rst,
 
     input wire [31:0] instr,
     input wire [31:0] readdata,
@@ -48,6 +48,9 @@ module rv32_main (
       .resultvsrc(resultvsrc),
       .alucode(alucode),
       .immcode(immcode),
+      .systemcode(systemcode),
+      .csrread(csrread),
+      .csrwrite(csrwrite),
       .pc(pc),
       .writedata(writedata),
       .aluout(aluout),

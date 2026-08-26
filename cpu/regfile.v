@@ -2,8 +2,8 @@ module regfile (
     input wire clk,
     input wire we3,
     input wire [4:0] ra1,
-    ra2,
-    wa3,
+    input wire [4:0] ra2,
+    input wire [4:0] wa3,
     input wire [31:0] wd3,
 
     output wire [31:0] rd1,

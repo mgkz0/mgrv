@@ -1,11 +1,12 @@
 module pcnextgen (
     input regwrite,
-    alusrc,
-    jump,
-    pcsrc,
+    input alusrc,
+    input jump,
+    input pcsrc,
     input [31:0] pc,
     input [31:0] rd1,
     input [31:0] immediate,
+    input [31:0] mtvec_out,
 
     output [31:0] pcnext
 );
