@@ -1,11 +1,11 @@
 module top (
     input clk,
-    rst,
+    input rst,
     input i_memwrite,
     input [31:0] w_instr,
     output d_memwrite,
     output [31:0] writedata,
-    d_memaddr
+    output [31:0] d_memaddr
 );
   /* verilator lint_off UNUSEDSIGNAL */
   wire [31:0] pc, readdata, r_instr;

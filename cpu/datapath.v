@@ -1,16 +1,20 @@
 module datapath (
     input wire clk,
-    rst,
+    input rst,
 
     input wire regwrite,
-    jump,
-    alusrc,
-    pcsrc,
+    input jump,
+    input alusrc,
+    input pcsrc,
     input wire [31:0] readdata,
     input wire [31:0] instr,
     input wire [1:0] resultvsrc,
     input wire [4:0] alucode,
     input wire [2:0] immcode,
+
+    input wire [3:0] systemcode,
+    input wire csrread,
+    input wire csrwrite,
 
     output wire [31:0] pc,
     output wire [31:0] writedata,
@@ -23,6 +27,12 @@ module datapath (
 
   wire [31:0] rd1, rd2, wd3;
   wire [31:0] srcb;
+
+  wire trap;
+  wire is_ebreak, is_ecall, csr_exc;
+  wire [31:0] csrrd, csrwd;
+  wire [31:0] mcause_in, mtvec_out;
+
 
   // SIGN IMMEDIATE GENERATION LOGIC
   immgen ig (
@@ -40,6 +50,7 @@ module datapath (
       .pc(pc),
       .rd1(rd1),
       .immediate(immediate),
+      .mtvec_out(mtvec_out),
       .pcnext(pcnext)
   );
 
@@ -49,6 +60,21 @@ module datapath (
       pcnext,
       pc
   );
+
+  // SYSTEM INSTRUCTIONS DATA GEN LOGIC
+  systemgen sg (
+      .systemcode(systemcode),
+      .rd1(rd1),
+      .csrrd(csrrd),
+      .rs1(instr[19:15]),
+      .csrwd(csrwd),
+      .is_ebreak(is_ebreak),
+      .is_ecall(is_ecall)
+  );
+
+  assign trap = (is_ecall || is_ebreak || csr_exc);
+
+  assign mcause_in = (is_ecall) ? 32'd11 : (is_ebreak) ? 32'd3 : (csr_exc) ? 32'd2 : 32'd0;
 
   // REGFILE LOGIC
   regfile rf (
@@ -60,6 +86,23 @@ module datapath (
       .wd3(wd3),
       .rd1(rd1),
       .rd2(rd2)
+  );
+
+  // CSR FILE LOGIC
+  csrfile csrf (
+      .rst(rst),
+      .clk(clk),
+      .we(csrwrite),
+      .re(csrread),
+      .mode(2'b11),
+      .a(instr[31:20]),
+      .wd(csrwd),
+      .rd(csrrd),
+      .pc(pc),
+      .mcause_in(mcause_in),
+      .trap(trap),
+      .csr_exc(csr_exc),
+      .mtvec_out(mtvec_out)
   );
 
   // ALU LOGIC

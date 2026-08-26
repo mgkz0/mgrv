@@ -1,7 +1,7 @@
 module alu (
     input wire [ 4:0] opcode,
     input wire [31:0] a,
-    b,
+    input wire [31:0] b,
 
     output wire [31:0] y,
     output wire zero

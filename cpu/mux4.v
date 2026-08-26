@@ -1,8 +1,8 @@
 module mux4 (
     input [WIDTH-1:0] d0,
-    d1,
-    d2,
-    d3,
+    input [WIDTH-1:0] d1,
+    input [WIDTH-1:0] d2,
+    input [WIDTH-1:0] d3,
     input [1:0] s,
     output reg [WIDTH-1:0] y
 );
