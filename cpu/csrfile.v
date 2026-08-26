@@ -18,7 +18,7 @@ module csrfile (
 );
   // regfile
   reg [31:0] rf[16];
-  
+
   integer i;
 
   // MACHINE MODE

@@ -51,6 +51,7 @@ module datapath (
       .rd1(rd1),
       .immediate(immediate),
       .mtvec_out(mtvec_out),
+      .trap(trap),
       .pcnext(pcnext)
   );
 
