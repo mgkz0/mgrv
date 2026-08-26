@@ -29,7 +29,7 @@ module systemdec (
     controls = 6'b00_0000;
     if (is_system) begin
       case (func3)
-        // EBREAK / ECALL
+        // ECALL / EBREAK
         3'b000:
         controls = (instr == 32'h0000_0073) ? 6'b00_0001 : (instr == 32'h0010_0073) ? 6'b00_0010 : 6'b00_0000;
         // CSRRW
