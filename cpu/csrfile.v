@@ -83,10 +83,15 @@ module csrfile (
 
     end else begin
       if (trap) begin
-        rf[get_idx(MEPC)]   <= pc;
+        rf[get_idx(MEPC)] <= pc;
         rf[get_idx(MCAUSE)] <= mcause_in;
+
+        rf[get_idx(MSTATUS)][7] <= rf[get_idx(MSTATUS)][3];
+        rf[get_idx(MSTATUS)][3] <= 1'b0;
+        rf[get_idx(MSTATUS)][12:11] <= mode;
+
       end else begin
-        if (we) begin
+        if (we && !csr_exc) begin
           rf[get_idx(a)] <= wd;
         end
       end

@@ -8,7 +8,7 @@ module control_unit (
     output memwrite,
     output jump,
     output pcsrc,
-    output [1:0] resultvsrc,
+    output [1:0] regwritesrc,
     output [2:0] immcode,
 
     output [3:0] systemcode,
@@ -34,7 +34,7 @@ module control_unit (
       .branch(branch),
       .jump(jump),
       .is_rv32m(is_rv32m),
-      .resultvsrc(resultvsrc),
+      .regwritesrc(regwritesrc),
       .aluop(aluop),
       .immcode(immcode),
       .is_system(is_system)

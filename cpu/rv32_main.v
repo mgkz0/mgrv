@@ -15,7 +15,7 @@ module rv32_main (
   wire regwrite, alusrc, jump, pcsrc, zero;
   wire csrread, csrwrite;
 
-  wire [1:0] resultvsrc;
+  wire [1:0] regwritesrc;
   wire [2:0] immcode;
   wire [4:0] alucode;
   wire [3:0] systemcode;
@@ -29,7 +29,7 @@ module rv32_main (
       .memwrite(memwrite),
       .jump(jump),
       .pcsrc(pcsrc),
-      .resultvsrc(resultvsrc),
+      .regwritesrc(regwritesrc),
       .immcode(immcode),
       .systemcode(systemcode),
       .csrread(csrread),
@@ -45,7 +45,7 @@ module rv32_main (
       .pcsrc(pcsrc),
       .readdata(readdata),
       .instr(instr),
-      .resultvsrc(resultvsrc),
+      .regwritesrc(regwritesrc),
       .alucode(alucode),
       .immcode(immcode),
       .systemcode(systemcode),
