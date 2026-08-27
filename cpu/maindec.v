@@ -8,7 +8,7 @@ module maindec (
     output branch,
     output jump,
     output is_rv32m,
-    output [1:0] resultvsrc,
+    output [1:0] regwritesrc,
     output [1:0] aluop,
     output [2:0] immcode,
     output is_system
@@ -18,7 +18,7 @@ module maindec (
 
   // Signal Mapping:
   // controls = {regwrite, alusrc, memwrite, branch, jump, resultvsrc[1:0], aluop[1:0], immcode[2:0]}
-  assign {regwrite, alusrc, memwrite, branch, jump, resultvsrc, aluop, immcode} = controls;
+  assign {regwrite, alusrc, memwrite, branch, jump, regwritesrc, aluop, immcode} = controls;
 
   assign is_rv32m = (opcode == 7'b0110011) && (func7 == 7'b0000001);
   assign is_system = (opcode == 7'b1110011);

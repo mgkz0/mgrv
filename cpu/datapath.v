@@ -8,7 +8,7 @@ module datapath (
     input pcsrc,
     input wire [31:0] readdata,
     input wire [31:0] instr,
-    input wire [1:0] resultvsrc,
+    input wire [1:0] regwritesrc,
     input wire [4:0] alucode,
     input wire [2:0] immcode,
 
@@ -80,7 +80,7 @@ module datapath (
   // REGFILE LOGIC
   regfile rf (
       .clk(clk),
-      .we3(regwrite),
+      .we3(regwrite && !trap),
       .ra1(instr[19:15]),
       .ra2(instr[24:20]),
       .wa3(instr[11:7]),
@@ -139,6 +139,9 @@ module datapath (
       .aligned(writedata)
   );
 
-  assign wd3 = (resultvsrc == 2'b00) ? aluout : (resultvsrc == 2'b01) ? loaddata : (pc + 32'd4);
+  // SELECTING SOURCE TO WRITE IN REGITER
+  assign wd3 = (csrread) ? csrrd : (regwritesrc == 2'b00) ? aluout : 
+	  (regwritesrc == 2'b01) ? loaddata : 
+	  (regwritesrc == 2'b10) ? (pc + 32'd4) : immediate;
 
 endmodule
