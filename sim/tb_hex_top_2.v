@@ -1,4 +1,4 @@
-module tb_top_1;
+module tb_hex_top_2;
 
 reg rst, clk;
 wire d_memwrite;
@@ -6,8 +6,8 @@ wire [31:0] writedata;
 wire [31:0] d_memaddr; 
 
 // Success conditions
-localparam SUCCESS_ADDR = 32'd128;
-localparam SUCCESS_VAL  = 32'd256; 
+localparam SUCCESS_ADDR = 32'd256;
+localparam SUCCESS_VAL  = 32'd42; 
 
 top dut(
  .clk (clk),
@@ -27,7 +27,7 @@ end
 
 initial begin
  // 1. Load instructions into Instruction Memory
- $readmemh("tests/memfile.hex", dut.imem.mem);
+ $readmemh("tests/memfile2.hex", dut.imem.mem);
  
  // 2. Reset Sequence
  rst = 1; #22;
@@ -35,7 +35,7 @@ initial begin
 
  // 3. Timeout Safety
  #2000;
- $display("Test 1 timed out! Hardware is likely stuck.");
+ $display("Test2 timed out! Hardware is likely stuck.");
  $finish;
 end
 
@@ -46,7 +46,7 @@ always @(negedge clk) begin
  if (d_memwrite) begin
   if (d_memaddr == SUCCESS_ADDR) begin 
    if (writedata == SUCCESS_VAL) begin 
-    $display("Test 1 passed! RV32IM support verified.");
+    $display("Test 2 passed! RV32IM support verified.");
     $finish;
    end else begin
     $display("Test 2 failed! Got %d, expected %d", $signed(writedata), SUCCESS_VAL);
