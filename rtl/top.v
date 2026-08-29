@@ -5,10 +5,13 @@ module top (
     input [31:0] w_instr,
     output d_memwrite,
     output [31:0] writedata,
-    output [31:0] d_memaddr
+    output [31:0] d_memaddr,
+
+    output [31:0] pc // for tbs
 );
   /* verilator lint_off UNUSEDSIGNAL */
-  wire [31:0] pc, readdata, r_instr;
+  //wire [31:0] pc; 
+  wire [31:0] readdata, r_instr;
   wire [3:0] wstrb;
   /* verilator lint_on UNUSEDSIGNAL */
   rv32_main cpu (
