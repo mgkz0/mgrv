@@ -22,13 +22,12 @@ void init_sim(Vtop* top, uint8_t cycles) {
 
 // Load ELF image into imem using i_memwrite/w_instr
 void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
-    uint32_t base = prog.base_addr;
-    if (base != 0) {
-        std::cerr << "Warning: ELF base != 0, this simple loader assumes 0\n";
-    }
+    uint32_t base = 0;  // e.g. 0x80000000
 
-    uint32_t addr = 0;
+    uint32_t addr = base;
+    std::cout << "ADDR: " << addr << "\n";
     size_t idx = 0;
+    std::cout << "DATA SIZE: " << prog.data.size() << "\n";
     while (idx < prog.data.size()) {
         // Fetch 4 bytes as one word (little-endian)
         uint32_t word = prog.data[idx] |
@@ -42,10 +41,8 @@ void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
         top->w_instr = word;
 
         // One full clock cycle to commit the write
-        top->clk = !top->clk;
-	top->eval();
-	top->clk = !top->clk;
-    	top->eval();
+        top->clk = !top->clk; top->eval();
+        top->clk = !top->clk; top->eval();
 
         addr += 4;
     }
@@ -59,13 +56,13 @@ void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
 void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles, uint32_t pass_addr = 0) {
     bool has_pass_addr = (pass_addr != 0);
     bool passed = false;
-
+    std::cout << "START PC: " << top->pc << "\n";
     for (uint64_t cycle = 0; cycle < max_cycles; ++cycle) {
         // Rising edge
         top->clk = 1;
         top->eval();
         tfp->dump(static_cast<vluint64_t>(cycle * 2));
-
+	//std::cout << "pc: " << top->pc << "\n";
         // Optional pass check (e.g., PC == pass_addr)
         if (has_pass_addr && !passed) {
             uint32_t pc = top->pc; // or top->pc_dbg if you exposed that
@@ -76,19 +73,23 @@ void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles, uint32_t pass_a
                 // break;
             }
         }
-
+	
         // Falling edge
         top->clk = 0;
         top->eval();
         tfp->dump(static_cast<vluint64_t>(cycle * 2 + 1));
     }
+    std::cout << "END PC: " << top->pc << "\n";
 
-    if (!passed && has_pass_addr) {
-        std::cout << "Did not reach PASS_ADDR within " << max_cycles << " cycles\n";
+    if (!has_pass_addr) {
+        std::cout << "Ran " << max_cycles << " cycles (no pass check)\n";
+    } else if (!passed) {
+        std::cout << "FAIL: did not reach PASS_ADDR within " << max_cycles << " cycles\n";
     }
 }
 
 int main(int argc, char** argv) {
+    Verilated::traceEverOn(true);
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <elf-file>\n";
         return 1;
@@ -117,9 +118,9 @@ int main(int argc, char** argv) {
     // For now, 0 means "no pass check"
     uint32_t pass_addr = 0;
 
-    // Run CPU
+     // Run CPU
     run_cpu(top, tfp, 1000000, pass_addr);
-
+   
     // Cleanup
     tfp->close();
     delete top;
