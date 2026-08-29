@@ -7,7 +7,7 @@ module top (
     output [31:0] writedata,
     output [31:0] d_memaddr,
 
-    output [31:0] pc // for tbs
+    output [31:0] pc  // for tbs
 );
   /* verilator lint_off UNUSEDSIGNAL */
   //wire [31:0] pc; 
