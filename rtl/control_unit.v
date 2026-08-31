@@ -1,13 +1,12 @@
 module control_unit (
     input [31:0] instr,
-    input zero,
 
     output [4:0] alucode,
     output regwrite,
     output alusrc,
     output memwrite,
     output jump,
-    output pcsrc,
+    output branch,
     output [1:0] regwritesrc,
     output [2:0] immcode,
 
@@ -19,7 +18,6 @@ module control_unit (
   wire is_rv32m;
   wire func7b5 = instr[31:25][5];
   wire opcode5 = instr[6:0][5];
-  wire branch;
   wire gregwrite;
 
   wire is_system;
@@ -59,5 +57,4 @@ module control_unit (
   );
 
   assign regwrite = (gregwrite || csrregwrite);
-  assign pcsrc = (branch && zero);
 endmodule

@@ -7,12 +7,13 @@ module top (
     output [31:0] writedata,
     output [31:0] d_memaddr,
 
-    output [31:0] pc  // for tbs
+    output [31:0] pc,  // for tbs
+    output [31:0] r_instr
 );
   /* verilator lint_off UNUSEDSIGNAL */
   //wire [31:0] pc; 
-  wire [31:0] readdata, r_instr;
-  wire [3:0] wstrb;
+  wire [31:0] readdata;  //r_instr;
+  wire [ 3:0] wstrb;
   /* verilator lint_on UNUSEDSIGNAL */
   rv32_main cpu (
       .clk(clk),
