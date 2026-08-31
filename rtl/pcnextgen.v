@@ -4,9 +4,11 @@ module pcnextgen (
     input jump,
     input take_branch,
     input trap,
+    input is_mret,
     input [31:0] pc,
     input [31:0] rd1,
     input [31:0] immediate,
+    input [31:0] mepc,
     /* verilator lint_off UNUSEDSIGNAL */
     input [31:0] mtvec_out,
     /* verilator lint_on UNUSEDSIGNAL */
@@ -39,6 +41,8 @@ module pcnextgen (
       pcnext = pcnextjalr;
     end else if (jump | take_branch) begin
       pcnext = pcnextbr;
+    end else if (is_mret) begin
+      pcnext = mepc;
     end else begin
       pcnext = pcplus4;
     end

@@ -10,6 +10,7 @@ module csrfile (
     input wire [31:0] mcause_in,
     input wire [31:0] pc,
     input wire trap,
+    input wire is_mret,
 
     output wire [31:0] rd,
 
@@ -78,22 +79,21 @@ module csrfile (
   always @(posedge clk or posedge rst) begin
     if (rst) begin
       for (i = 0; i < 16; i = i + 1) rf[i] <= 32'b0;
-      rf[get_idx(MISA)]      <= MISA_STATE;
-      rf[get_idx(MVENDORID)] <= 32'd0;  // or your vendor ID
-      rf[get_idx(MARCHID)]   <= 32'd0;  // or your arch ID
-      rf[get_idx(MIMPID)]    <= 32'd0;
-      rf[get_idx(MHARTID)]   <= 32'd0;  // must be 0
-      rf[get_idx(MSTATUS)]   <= MSTATUS_STATE;
+      rf[get_idx(MISA)]    <= MISA_STATE;
+      rf[get_idx(MSTATUS)] <= MSTATUS_STATE;
       // MTVEC, MEPC, MCAUSE can stay 0
     end else begin
       if (trap) begin
         rf[get_idx(MEPC)] <= pc;
         rf[get_idx(MCAUSE)] <= mcause_in;
 
-        rf[get_idx(MSTATUS)][7] <= rf[get_idx(MSTATUS)][3];
-        rf[get_idx(MSTATUS)][3] <= 1'b0;
-        rf[get_idx(MSTATUS)][12:11] <= mode;
-
+        rf[get_idx(MSTATUS)][7] <= rf[get_idx(MSTATUS)][3];  // MPIE 
+        rf[get_idx(MSTATUS)][3] <= 1'b0;  // MIE
+        rf[get_idx(MSTATUS)][12:11] <= mode;  // CPU Mode
+      end else if (is_mret) begin
+        rf[get_idx(MSTATUS)][3] <= rf[get_idx(MSTATUS)][7];  // MIE
+        rf[get_idx(MSTATUS)][7] <= 1'b1;  // MPIE
+        rf[get_idx(MSTATUS)][12:11] <= 2'b11;
       end else begin
         if (we && !csr_exc) begin
           rf[get_idx(a)] <= wd;
@@ -116,6 +116,6 @@ module csrfile (
   end
 
   assign mtvec_out = rf[get_idx(MTVEC)];
-  assign rd = re ? rf[get_idx(a)] : 32'b0;
+  assign rd = re ? rf[get_idx(a)] : is_mret ? rf[get_idx(MEPC)] : 32'b0;
 
 endmodule

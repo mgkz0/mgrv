@@ -9,11 +9,14 @@ module systemdec (
 );
 
   wire [2:0] func3;
+  wire [6:0] func7;
   wire is_csr, is_rd, is_rs1;
 
   reg [5:0] controls;
 
   assign func3 = instr[14:12];
+  assign func7 = instr[31:25];
+
   assign is_csr = (is_system && func3 != 3'b000 && func3 != 3'b100);
 
   assign is_rd = (instr[11:7] != 5'd0);
@@ -29,9 +32,9 @@ module systemdec (
     controls = 6'b00_0000;
     if (is_system) begin
       case (func3)
-        // ECALL / EBREAK
+        // ECALL / EBREAK / MRET
         3'b000:
-        controls = (instr == 32'h0000_0073) ? 6'b00_0001 : (instr == 32'h0010_0073) ? 6'b00_0010 : 6'b00_0000;
+        controls = (instr == 32'h0000_0073) ? 6'b00_0001 : (instr == 32'h0010_0073) ? 6'b00_0010 : (func7 == 7'b0011000) ? 6'b00_1001 : 6'b00_0000;
         // CSRRW
         3'b001: controls = is_rd ? 6'b11_0011 : 6'b01_0011;
         // CSRRS
