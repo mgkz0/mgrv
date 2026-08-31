@@ -64,17 +64,7 @@ module csrfile (
     end
   endfunction
 
-
-  assign csr_exc =
-    (re && (mode < a[9:8])) ||
-    (we && (mode < a[9:8])) ||
-    (we && (a[11:10] == 2'b11)) ||
-    (we && (get_idx(
-      a
-  ) == 4'd0)) || (re && (get_idx(
-      a
-  ) == 4'd0));
-
+  assign csr_exc = (re && (mode < a[9:8])) || (we && (mode < a[9:8]));
 
   always @(posedge clk or posedge rst) begin
     if (rst) begin

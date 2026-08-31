@@ -14,7 +14,7 @@ module rv32_main #(
     output wire [3:0] wstrb
 );
 
-  wire regwrite, alusrc, jump, branch;
+  wire regwrite, alusrca, alusrcb, jump, branch;
   wire csrread, csrwrite;
 
   wire [1:0] regwritesrc;
@@ -26,7 +26,8 @@ module rv32_main #(
       .instr(instr),
       .alucode(alucode),
       .regwrite(regwrite),
-      .alusrc(alusrc),
+      .alusrca(alusrca),
+      .alusrcb(alusrcb),
       .memwrite(memwrite),
       .jump(jump),
       .branch(branch),
@@ -42,7 +43,8 @@ module rv32_main #(
       .rst(rst),
       .regwrite(regwrite),
       .jump(jump),
-      .alusrc(alusrc),
+      .alusrca(alusrca),
+      .alusrcb(alusrcb),
       .branch(branch),
       .readdata(readdata),
       .instr(instr),

@@ -15,8 +15,8 @@ constexpr uint8_t  PRINT_PC_CYCLES    = 16;
 
 inline void print_bin32(const char* label, uint32_t value) {
     std::cout << label
-              << " 32'h " << std::hex << value << std::dec << "\n"
-              << " 32'd " << value << "\n";
+              << "0x" << std::hex << value << std::dec << "\n";
+              //<< " 32'd " << value << "\n";
 }
 
 void init_sim(Vtop* top, uint8_t cycles) {
@@ -37,7 +37,7 @@ void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
     std::cout << "ADDR: " << addr << "\n";
     std::cout << "DATA SIZE: " << prog.data.size() << "\n";
 
-    
+    uint32_t cnt = 0;
     size_t idx = 0;
     while (idx < prog.data.size()) {
         uint32_t word = prog.data[idx] |
@@ -45,12 +45,14 @@ void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
                         (prog.data[idx + 2] << 16) |
                         (prog.data[idx + 3] << 24);
         idx += 4;
-
+	cnt += 1;
         top->i_memwrite = 1;
         top->pc = addr;
         top->w_instr = word;
-	//print_bin32("I_DATA: ", word);
-        top->clk = !top->clk; top->eval();
+	//if (cnt <= 700) {
+	//	print_bin32("INSR: ", word);
+	//}
+	top->clk = !top->clk; top->eval();
         top->clk = !top->clk; top->eval();
 
         addr += 4;
@@ -80,12 +82,19 @@ void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles, const std::stri
     top->clk = 0;
     top->eval();
     tfp->dump(t++);
-
+    
+    uint32_t cnt = 0;
     std::cout << "START PC: " << top->pc << "\n";
     for (uint64_t cycle = 0; cycle < max_cycles; ++cycle) {
         top->clk = 1;
         top->eval();
         tfp->dump(t++);	
+	cnt += 1;
+	if (cnt <= 100) {
+		//std::cout << "NOW PC: " << top->pc << "\n";
+		print_bin32("NOW PC:", top->pc);
+		print_bin32("INSTR: ", top->r_instr); 
+	}
 	if (!is_pc_208) {
 		//std::cout << "NOW PC: " << top->pc << "\n";
 	}

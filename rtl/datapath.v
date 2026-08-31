@@ -6,7 +6,8 @@ module datapath #(
 
     input wire regwrite,
     input jump,
-    input alusrc,
+    input alusrca,
+    input alusrcb,
     input branch,
     input wire [31:0] readdata,
     input wire [31:0] instr,
@@ -27,7 +28,7 @@ module datapath #(
   wire [31:0] immediate, pcnext, loaddata;
 
   wire [31:0] rd1, rd2, wd3;
-  wire [31:0] srcb;
+  wire [31:0] srca, srcb;
 
   wire take_branch, zero;
   wire trap;
@@ -47,7 +48,7 @@ module datapath #(
   // NEXT PC LOGIC
   pcnextgen pcng (
       .regwrite(regwrite),
-      .alusrc(alusrc),
+      .alusrc(alusrcb),
       .jump(jump),
       .take_branch(take_branch),
       .pc(pc),
@@ -113,17 +114,23 @@ module datapath #(
       .mtvec_out(mtvec_out)
   );
 
+  mux2 #(32) srcamux (
+      rd1,
+      pc,
+      alusrca,
+      srca
+  );
   // ALU LOGIC
   mux2 #(32) srcbmux (
       rd2,
       immediate,
-      alusrc,
+      alusrcb,
       srcb
   );
 
   alu alu (
       .opcode(alucode),
-      .a(rd1),
+      .a(srca),
       .b(srcb),
       .y(aluout),
       .zero(zero)
