@@ -1,4 +1,6 @@
-module rv32_main (
+module rv32_main #(
+    parameter PC_RESET_VALUE = 32'h8000_0000
+) (
     input wire clk,
     input rst,
 
@@ -12,7 +14,7 @@ module rv32_main (
     output wire [3:0] wstrb
 );
 
-  wire regwrite, alusrc, jump, pcsrc, zero;
+  wire regwrite, alusrc, jump, branch;
   wire csrread, csrwrite;
 
   wire [1:0] regwritesrc;
@@ -22,13 +24,12 @@ module rv32_main (
 
   control_unit cu (
       .instr(instr),
-      .zero(zero),
       .alucode(alucode),
       .regwrite(regwrite),
       .alusrc(alusrc),
       .memwrite(memwrite),
       .jump(jump),
-      .pcsrc(pcsrc),
+      .branch(branch),
       .regwritesrc(regwritesrc),
       .immcode(immcode),
       .systemcode(systemcode),
@@ -36,13 +37,13 @@ module rv32_main (
       .csrwrite(csrwrite)
   );
 
-  datapath dp (
+  datapath #(PC_RESET_VALUE) dp (
       .clk(clk),
       .rst(rst),
       .regwrite(regwrite),
       .jump(jump),
       .alusrc(alusrc),
-      .pcsrc(pcsrc),
+      .branch(branch),
       .readdata(readdata),
       .instr(instr),
       .regwritesrc(regwritesrc),
@@ -54,8 +55,7 @@ module rv32_main (
       .pc(pc),
       .writedata(writedata),
       .aluout(aluout),
-      .wstrb(wstrb),
-      .zero(zero)
+      .wstrb(wstrb)
   );
 
 endmodule

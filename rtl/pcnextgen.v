@@ -2,7 +2,7 @@ module pcnextgen (
     input regwrite,
     input alusrc,
     input jump,
-    input pcsrc,
+    input take_branch,
     input trap,
     input [31:0] pc,
     input [31:0] rd1,
@@ -37,7 +37,7 @@ module pcnextgen (
       pcnext = pcnexttrap;
     end else if (is_jalr) begin
       pcnext = pcnextjalr;
-    end else if (jump | pcsrc) begin
+    end else if (jump | take_branch) begin
       pcnext = pcnextbr;
     end else begin
       pcnext = pcplus4;

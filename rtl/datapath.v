@@ -1,11 +1,13 @@
-module datapath (
+module datapath #(
+    parameter PC_RESET_VALUE = 32'h8000_0000
+) (
     input wire clk,
     input rst,
 
     input wire regwrite,
     input jump,
     input alusrc,
-    input pcsrc,
+    input branch,
     input wire [31:0] readdata,
     input wire [31:0] instr,
     input wire [1:0] regwritesrc,
@@ -19,8 +21,7 @@ module datapath (
     output wire [31:0] pc,
     output wire [31:0] writedata,
     output wire [31:0] aluout,
-    output wire [3:0] wstrb,
-    output wire zero
+    output wire [ 3:0] wstrb
 );
 
   wire [31:0] immediate, pcnext, loaddata;
@@ -28,11 +29,11 @@ module datapath (
   wire [31:0] rd1, rd2, wd3;
   wire [31:0] srcb;
 
+  wire take_branch, zero;
   wire trap;
   wire is_ebreak, is_ecall, csr_exc;
   wire [31:0] csrrd, csrwd;
   wire [31:0] mcause_in, mtvec_out;
-
 
   // SIGN IMMEDIATE GENERATION LOGIC
   immgen ig (
@@ -46,7 +47,7 @@ module datapath (
       .regwrite(regwrite),
       .alusrc(alusrc),
       .jump(jump),
-      .pcsrc(pcsrc),
+      .take_branch(take_branch),
       .pc(pc),
       .rd1(rd1),
       .immediate(immediate),
@@ -55,7 +56,7 @@ module datapath (
       .pcnext(pcnext)
   );
 
-  flopr #(32) pcprep (
+  flopr #(32, PC_RESET_VALUE) pcprep (
       clk,
       rst,
       pcnext,
@@ -137,6 +138,15 @@ module datapath (
       .offset(aluout[1:0]),
       .wstrb(wstrb),
       .aligned(writedata)
+  );
+
+  // BRANCH DECODE
+  branchdec bd (
+      .branch(branch),
+      .zero(zero),
+      .func3(instr[14:12]),
+      .aluout32b(aluout[31]),
+      .take_branch(take_branch)
   );
 
   // SELECTING SOURCE TO WRITE IN REGITER

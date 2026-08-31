@@ -78,9 +78,13 @@ module csrfile (
   always @(posedge clk or posedge rst) begin
     if (rst) begin
       for (i = 0; i < 16; i = i + 1) rf[i] <= 32'b0;
-      rf[get_idx(MISA)] <= MISA_STATE;
-      rf[get_idx(MSTATUS)] <= MSTATUS_STATE;
-
+      rf[get_idx(MISA)]      <= MISA_STATE;
+      rf[get_idx(MVENDORID)] <= 32'd0;  // or your vendor ID
+      rf[get_idx(MARCHID)]   <= 32'd0;  // or your arch ID
+      rf[get_idx(MIMPID)]    <= 32'd0;
+      rf[get_idx(MHARTID)]   <= 32'd0;  // must be 0
+      rf[get_idx(MSTATUS)]   <= MSTATUS_STATE;
+      // MTVEC, MEPC, MCAUSE can stay 0
     end else begin
       if (trap) begin
         rf[get_idx(MEPC)] <= pc;
