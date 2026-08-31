@@ -6,7 +6,8 @@ module systemgen (
 
     output reg [31:0] csrwd,
     output reg is_ebreak,
-    output reg is_ecall
+    output reg is_ecall,
+    output reg is_mret
 );
   wire [31:0] uimm;
 
@@ -15,10 +16,12 @@ module systemgen (
   always @(*) begin
     is_ecall = 1'b0;
     is_ebreak = 1'b0;
+    is_mret = 1'b0;
     csrwd = 32'b0;
     case (systemcode)
       4'b0001: is_ecall = 1'b1;
       4'b0010: is_ebreak = 1'b1;
+      4'b1001: is_mret = 1'b1;
       // CSRRW / CSRRS / CSRRC
       4'b0011: csrwd = rd1;
       4'b0100: csrwd = csrrd | rd1;

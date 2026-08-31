@@ -31,9 +31,11 @@ module datapath #(
 
   wire take_branch, zero;
   wire trap;
-  wire is_ebreak, is_ecall, csr_exc;
+  wire is_ebreak, is_ecall, is_mret, csr_exc;
   wire [31:0] csrrd, csrwd;
   wire [31:0] mcause_in, mtvec_out;
+
+  wire [31:0] mepc;
 
   // SIGN IMMEDIATE GENERATION LOGIC
   immgen ig (
@@ -53,6 +55,8 @@ module datapath #(
       .immediate(immediate),
       .mtvec_out(mtvec_out),
       .trap(trap),
+      .is_mret(is_mret),
+      .mepc(mepc),
       .pcnext(pcnext)
   );
 
@@ -71,12 +75,13 @@ module datapath #(
       .rs1(instr[19:15]),
       .csrwd(csrwd),
       .is_ebreak(is_ebreak),
-      .is_ecall(is_ecall)
+      .is_ecall(is_ecall),
+      .is_mret(is_mret)
   );
 
   assign trap = (is_ecall || is_ebreak || csr_exc);
-
   assign mcause_in = (is_ecall) ? 32'd11 : (is_ebreak) ? 32'd3 : (csr_exc) ? 32'd2 : 32'd0;
+  assign mepc = is_mret ? csrrd : 32'b0;
 
   // REGFILE LOGIC
   regfile rf (
@@ -102,6 +107,7 @@ module datapath #(
       .rd(csrrd),
       .pc(pc),
       .mcause_in(mcause_in),
+      .is_mret(is_mret),
       .trap(trap),
       .csr_exc(csr_exc),
       .mtvec_out(mtvec_out)
