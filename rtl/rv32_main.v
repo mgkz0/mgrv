@@ -21,6 +21,7 @@ module rv32_main #(
   wire [2:0] immcode;
   wire [4:0] alucode;
   wire [3:0] systemcode;
+  wire [3:0] csrinteraddr;
 
   control_unit cu (
       .instr(instr),
@@ -35,7 +36,8 @@ module rv32_main #(
       .immcode(immcode),
       .systemcode(systemcode),
       .csrread(csrread),
-      .csrwrite(csrwrite)
+      .csrwrite(csrwrite),
+      .csrinteraddr(csrinteraddr)
   );
 
   datapath #(PC_RESET_VALUE) dp (
@@ -54,6 +56,7 @@ module rv32_main #(
       .systemcode(systemcode),
       .csrread(csrread),
       .csrwrite(csrwrite),
+      .csrinteraddr(csrinteraddr),
       .pc(pc),
       .writedata(writedata),
       .aluout(aluout),

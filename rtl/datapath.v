@@ -16,6 +16,7 @@ module datapath #(
     input wire [2:0] immcode,
 
     input wire [3:0] systemcode,
+    input wire [3:0] csrinteraddr,
     input wire csrread,
     input wire csrwrite,
 
@@ -103,7 +104,8 @@ module datapath #(
       .we(csrwrite),
       .re(csrread),
       .mode(2'b11),
-      .a(instr[31:20]),
+      .a(csrinteraddr),
+      .extaddr(instr[31:20]),
       .wd(csrwd),
       .rd(csrrd),
       .pc(pc),
