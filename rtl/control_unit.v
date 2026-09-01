@@ -12,6 +12,7 @@ module control_unit (
     output [2:0] immcode,
 
     output [3:0] systemcode,
+    output [3:0] csrinteraddr,
     output csrread,
     output csrwrite
 );
@@ -56,6 +57,11 @@ module control_unit (
       .csrwrite(csrwrite),
       .csrread(csrread),
       .systemcode(systemcode)
+  );
+
+  csraddrdec csrad (
+      .extaddr  (instr[31:20]),
+      .interaddr(csrinteraddr)
   );
 
   assign regwrite = (gregwrite || csrregwrite);
