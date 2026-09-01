@@ -31,11 +31,11 @@ void init_sim(Vtop* top, uint8_t cycles) {
     }
 }
 
-void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
+void load_program_into_imem(Vtop* top, const ElfProgram& prog, const std::string& test_name) {
     uint32_t addr = IMEM_BASE_ADDR;
-    
-    std::cout << "ADDR: " << addr << "\n";
-    std::cout << "DATA SIZE: " << prog.data.size() << "\n";
+    std::cout << "TEST: [" << test_name << "] \n"; 
+    //print_bin32("Addr START: ", addr);
+    std::cout << "Data size: " << prog.data.size() << "\n";
 
     uint32_t cnt = 0;
     size_t idx = 0;
@@ -62,7 +62,7 @@ void load_program_into_imem(Vtop* top, const ElfProgram& prog) {
     top->w_instr = 0;
 }
 
-void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles, const std::string& test_name) {
+void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles) {
     bool passed = false;
     uint64_t pass_cycle = 0;
 
@@ -84,23 +84,23 @@ void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles, const std::stri
     tfp->dump(t++);
     
     uint32_t cnt = 0;
-    std::cout << "START PC: " << top->pc << "\n";
+    //print_bin32("PC start: ", top->pc);
     for (uint64_t cycle = 0; cycle < max_cycles; ++cycle) {
         top->clk = 1;
         top->eval();
         tfp->dump(t++);	
 	cnt += 1;
-	if (cnt <= 100) {
-		//std::cout << "NOW PC: " << top->pc << "\n";
-		print_bin32("NOW PC:", top->pc);
-		print_bin32("INSTR: ", top->r_instr); 
-	}
-	if (!is_pc_208) {
-		//std::cout << "NOW PC: " << top->pc << "\n";
-	}
-	if (!is_pc_208 && top->pc == 208) {
-		is_pc_208 = true;
-	}
+	//if (cnt <= 100) {
+	//	std::cout << "NOW PC: " << top->pc << "\n";
+	//	print_bin32("NOW PC:", top->pc);
+	//	print_bin32("INSTR: ", top->r_instr); 
+	//}
+	//if (!is_pc_208) {
+	//	std::cout << "NOW PC: " << top->pc << "\n";
+	//}
+	//if (!is_pc_208 && top->pc == 208) {
+	//	is_pc_208 = true;
+	//}
         if (!passed &&
             top->d_memwrite &&
             top->d_memaddr == TOHOST_ADDR &&
@@ -113,14 +113,15 @@ void run_cpu(Vtop* top, VerilatedVcdC* tfp, uint64_t max_cycles, const std::stri
         top->eval();
         tfp->dump(t++);
     }
-    print_bin32("END INSTR: \n", top->r_instr);	
-    std::cout << "END PC: " << top->pc << "\n";
-    std::cout << "[" << test_name << "] ";
+    print_bin32("INSTR end: ", top->r_instr);	
+    print_bin32("PC end: ", top->pc);
     if (passed) {
-        std::cout << "[PASS]\n";
+        std::cout << "STATUS: [PASS]\n";
     } else {
-        std::cout << "[FAIL]\n";
+        std::cout << "STATUS: [FAIL]\n";
     }
+
+    std::cout << "------------------------------------\n";
 }
 
 int main(int argc, char** argv) {
@@ -148,9 +149,9 @@ int main(int argc, char** argv) {
     tfp->open("trace.vcd");
 
     init_sim(top, INIT_SIM_CYCLES);
-    load_program_into_imem(top, prog);
-    run_cpu(top, tfp, DEFAULT_MAX_CYCLES, test_name);
-   
+    load_program_into_imem(top, prog, test_name);
+    run_cpu(top, tfp, DEFAULT_MAX_CYCLES);
+ 
     tfp->close();
     delete top;
     return 0;
