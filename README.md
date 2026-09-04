@@ -1,4 +1,4 @@
-# MGRV
+# MGRV (Mega RISC-V)
 
 ## Introduction
 
