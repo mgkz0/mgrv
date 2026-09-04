@@ -1,4 +1,9 @@
-module top (
+module top #(
+  // CONFIGURATION
+  localparam DATARAM_ADDR_WIDTH = 18,
+  localparam INSTRRAM_ADDR_WIDTH = 16,
+  localparam PC_RESET_VALUE = 32'h8000_0000
+) (
     input clk,
     input rst,
     input i_memwrite,
@@ -10,11 +15,6 @@ module top (
     output [31:0] pc,
     output [31:0] r_instr
 );
-
-  // CONFIGURATION
-  parameter DATARAM_ADDR_WIDTH = 18;
-  parameter INSTRRAM_ADDR_WIDTH = 16;
-  parameter PC_RESET_VALUE = 32'h8000_0000;
   
   /* verilator lint_off UNUSEDSIGNAL */
   //wire [31:0] pc; 
