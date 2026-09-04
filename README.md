@@ -40,9 +40,8 @@ Repo structure:
 
 Datapath Diagram:
 <p align="center">
-  <img src="assets/datapath_diagram.svg" alt="Datapath Diagram">
+  <img src="assets/datapath_diagram.svg" style="background-color: white; padding: 12px; border-radius: 8px;">
 </p>
-
 
 
 GTKWave wavetrace on running tests:
