@@ -331,7 +331,7 @@
     </g>
   </g>
   <g s:type="generic" transform="translate(265.5,423)" s:width="30" s:height="40" id="cell_pcprep">
-    <text x="15" y="-4" class="nodelabel cell_pcprep" s:attribute="ref">$paramod$7822791697b5e36636b83d4b0a1b7269bd099a0a\flopr</text>
+    <text x="15" y="-4" class="nodelabel cell_pcprep" s:attribute="ref">flopr</text>
     <rect width="30" height="60" s:generic="body" class="cell_pcprep"/>
     <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_pcprep~clk">
       <text x="-3" y="-4" class="inputPortLabel cell_pcprep">clk</text>
@@ -422,7 +422,7 @@
     </g>
   </g>
   <g s:type="generic" transform="translate(1057,513)" s:width="30" s:height="40" id="cell_srcamux">
-    <text x="15" y="-4" class="nodelabel cell_srcamux" s:attribute="ref">$paramod\mux2\WIDTH=s32'00000000000000000000000000100000</text>
+    <text x="15" y="-4" class="nodelabel cell_srcamux" s:attribute="ref">mux2</text>
     <rect width="30" height="60" s:generic="body" class="cell_srcamux"/>
     <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_srcamux~d0">
       <text x="-3" y="-4" class="inputPortLabel cell_srcamux">d0</text>
@@ -438,7 +438,7 @@
     </g>
   </g>
   <g s:type="generic" transform="translate(1057,621)" s:width="30" s:height="40" id="cell_srcbmux">
-    <text x="15" y="-4" class="nodelabel cell_srcbmux" s:attribute="ref">$paramod\mux2\WIDTH=s32'00000000000000000000000000100000</text>
+    <text x="15" y="-4" class="nodelabel cell_srcbmux" s:attribute="ref">mux2</text>
     <rect width="30" height="60" s:generic="body" class="cell_srcbmux"/>
     <g transform="translate(0,10)" s:x="0" s:y="10" s:pid="in0" id="port_srcbmux~d0">
       <text x="-3" y="-4" class="inputPortLabel cell_srcbmux">d0</text>
