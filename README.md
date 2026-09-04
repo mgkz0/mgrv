@@ -134,21 +134,22 @@ All RV32UI tests done
 
 
 If you don't want run every tests, you can run it like this:
-For I extension:
+
+- For I extension:
 ```bash
 make run-ui RISCV_TESTS="YOUR_PATH_TO_ISA"
 ```
-For M extension:
+- For M extension:
 ```bash
 make run-um RISCV_TESTS="YOUR_PATH_TO_ISA"
 ```
-For Zicsr extension:
+- For Zicsr extension:
 ```bash
-make run-csr RISCV_TESTS="YOUR_PATH_TO_ISA" # for Zicsr extention
+make run-csr RISCV_TESTS="YOUR_PATH_TO_ISA" 
 ```
-For running single test (use testname from `riscv-tests/isa` dir):
+- For running single test (use testname from `riscv-tests/isa` dir):
 ```bash
-make run-test TEST=rv32ui-p-add RISCV_TESTS="YOUR_PATH_TO_ISA"
+make run-test TEST=rv32ui-p-add RISCV_TESTS="YOUR_PATH_TO_ISA" # example with rv32ui-p-add
 ```
 
 
