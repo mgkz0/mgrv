@@ -37,6 +37,11 @@ Repo structure:
     └── elfloader.h       # ELF loader header
 ```
 
+### GTKWave overview on running tests:
+<p align="center">
+  <img src="assets/gtkwave.png">
+</p>
+
 
 ## Configuration
 You can configure CPU parameters in `rtl/top.v` module:
