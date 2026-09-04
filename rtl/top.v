@@ -7,15 +7,22 @@ module top (
     output [31:0] writedata,
     output [31:0] d_memaddr,
 
-    output [31:0] pc,  // for tbs
+    output [31:0] pc,
     output [31:0] r_instr
 );
+
+  // CONFIGURATION
+  parameter DATARAM_ADDR_WIDTH = 18;
+  parameter INSTRRAM_ADDR_WIDTH = 16;
+  parameter PC_RESET_VALUE = 32'h8000_0000;
+  
   /* verilator lint_off UNUSEDSIGNAL */
   //wire [31:0] pc; 
-  wire [31:0] readdata;  //r_instr;
+  wire [31:0] readdata;
   wire [ 3:0] wstrb;
   /* verilator lint_on UNUSEDSIGNAL */
-  rv32_main cpu (
+
+  rv32_main #(PC_RESET_VALUE) cpu (
       .clk(clk),
       .rst(rst),
       .instr(r_instr),
@@ -28,7 +35,7 @@ module top (
   );
 
   ram #(
-      .ADDR_WIDTH(16),
+      .ADDR_WIDTH(INSTRRAM_ADDR_WIDTH),
       .DATA_WIDTH(32)
   ) imem (
       .clk(clk),
@@ -39,7 +46,7 @@ module top (
   );
 
   dataram32 #(
-      .ADDR_WIDTH(18)
+      .ADDR_WIDTH(DATARAM_ADDR_WIDTH)
   ) dmem (
       .clk(clk),
       .we(d_memwrite),
