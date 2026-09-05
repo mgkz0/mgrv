@@ -2,7 +2,7 @@
 
 ## Introduction
 
-RV32IM + Zicsr CPU core, written on verilog. Include single-cycle architecture & currently run only in Machine mode priveledge level. Have 2 RAM modules with different ports, for instructions & data. Tested & verified using `https://github.com/riscv-software-src/riscv-tests`. 
+RV32IM + Zicsr CPU core, written on verilog. Include single-cycle architecture & currently run only in Machine mode priveledge level. Have 2 RAM modules with different ports, for instructions & data. Tested & verified using <https://github.com/riscv-software-src/riscv-tests>. 
 
 Repo structure:
 ```
@@ -51,7 +51,7 @@ GTKWave wavetrace on running tests:
 ## Configuration
 You can configure CPU parameters in `rtl/top.v` module:
 
-- `DATARAM_ADDR_WIDTH` - Data RAM size (for 1mb it's must me 18).
+- `DATARAM_ADDR_WIDTH` - Data RAM size (for 1mb it's must be 18).
 - `INSTRRAM_ADDR_WIDTH` - Instructions RAM size.
 - `PC_RESET_VALUE` - Value that PC start's after reset (for tests use `0x80000000`).
 
@@ -60,8 +60,8 @@ You can configure CPU parameters in `rtl/top.v` module:
 - Verilator
 
 For testing:
-- RISC-V GNU Toolchain (`https://github.com/riscv-collab/riscv-gnu-toolchain`)
-- RISC-V Software tests (`https://github.com/riscv-software-src/riscv-tests`)
+- [RISC-V GNU Toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain)
+- [RISC-V Software tests](https://github.com/riscv-software-src/riscv-tests)
 
 
 ## Testbench setup
