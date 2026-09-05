@@ -36,14 +36,12 @@ module pcnextgen (
 
   always @(*) begin
     if (trap) begin
-      //$display("TRAP TAKEN, MTVEC_OUT | PC: %h, %h", mtvec_out, pc);
       pcnext = pcnexttrap;
     end else if (is_jalr) begin
       pcnext = pcnextjalr;
     end else if (jump | take_branch) begin
       pcnext = pcnextbr;
     end else if (is_mret) begin
-      //$display("MRET TAKEN, MEPC | PC: %h, %h", mepc, pc);
       pcnext = mepc;
     end else begin
       pcnext = pcplus4;

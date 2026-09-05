@@ -3,20 +3,20 @@ module csraddrdec (
     output reg [3:0] interaddr
 );
   // MACHINE MODE
-  parameter reg [11:0] MISA = 12'h301;
+  localparam reg [11:0] MISA = 12'h301;
   // IDS REGS
-  parameter reg [11:0] MVENDORID = 12'hF11;
-  parameter reg [11:0] MARCHID = 12'hF12;
-  parameter reg [11:0] MIMPID = 12'hF13;
-  parameter reg [11:0] MHARTID = 12'hF14;
+  localparam reg [11:0] MVENDORID = 12'hF11;
+  localparam reg [11:0] MARCHID = 12'hF12;
+  localparam reg [11:0] MIMPID = 12'hF13;
+  localparam reg [11:0] MHARTID = 12'hF14;
   // STATE REGS
-  parameter reg [11:0] MSTATUS = 12'h300;
-  parameter reg [11:0] MTVEC = 12'h305;
-  parameter reg [11:0] MCAUSE = 12'h342;
-  parameter reg [11:0] MEPC = 12'h341;
+  localparam reg [11:0] MSTATUS = 12'h300;
+  localparam reg [11:0] MTVEC = 12'h305;
+  localparam reg [11:0] MCAUSE = 12'h342;
+  localparam reg [11:0] MEPC = 12'h341;
   // COUNTER REGS
-  parameter reg [11:0] MCYCLE = 12'hB00;
-  parameter reg [11:0] MCYCLEH = 12'hB80;
+  localparam reg [11:0] MCYCLE = 12'hB00;
+  localparam reg [11:0] MCYCLEH = 12'hB80;
 
   always @(*) begin
     case (extaddr)
