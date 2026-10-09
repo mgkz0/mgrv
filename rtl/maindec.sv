@@ -14,17 +14,18 @@ module maindec (
     output [2:0] immcode,
     output is_system
 );
-
   reg [12:0] controls;
 
   // Signal Mapping:
   // controls = {regwrite, alusrca, alusrcb, memwrite, branch, jump, regwritesrc[1:0], aluop[1:0], immcode[2:0]}
-  assign {regwrite, alusrca, alusrcb, memwrite, branch, jump, regwritesrc, aluop, immcode} = controls;
+  assign {
+   regwrite, alusrca, alusrcb, memwrite, branch, jump, regwritesrc, aluop, immcode
+   } = controls;
 
   assign is_rv32m = (opcode == 7'b0110011) && (func7 == 7'b0000001);
   assign is_system = (opcode == 7'b1110011);
 
-  always @(*) begin
+  always_comb begin
     case (opcode)
       // R-Type: A=rd1, B=rd2
       7'b0110011: controls = 13'b1_0_0_0_0_0_00_10_000;

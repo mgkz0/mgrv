@@ -1,5 +1,5 @@
 module datapath #(
-    parameter PC_RESET_VALUE = 32'h8000_0000
+    parameter logic [31:0] PC_RESET_VALUE = 32'h8000_0000
 ) (
     input wire clk,
     input rst,
@@ -62,11 +62,14 @@ module datapath #(
       .pcnext(pcnext)
   );
 
-  flopr #(32, PC_RESET_VALUE) pcprep (
-      clk,
-      rst,
-      pcnext,
-      pc
+  flopr #(
+      .WIDTH(32),
+      .RESET_VALUE(PC_RESET_VALUE)
+  ) pcprep (
+      .clk(clk),
+      .rst(rst),
+      .d  (pcnext),
+      .q  (pc)
   );
 
   // SYSTEM INSTRUCTIONS DATA GEN LOGIC
@@ -117,17 +120,17 @@ module datapath #(
   );
 
   mux2 #(32) srcamux (
-      rd1,
-      pc,
-      alusrca,
-      srca
+      .a(rd1),
+      .b(pc),
+      .s(alusrca),
+      .y(srca)
   );
   // ALU LOGIC
   mux2 #(32) srcbmux (
-      rd2,
-      immediate,
-      alusrcb,
-      srcb
+      .a(rd2),
+      .b(immediate),
+      .s(alusrcb),
+      .y(srcb)
   );
 
   alu alu (
@@ -165,8 +168,8 @@ module datapath #(
   );
 
   // SELECTING SOURCE TO WRITE IN REGITER
-  assign wd3 = (csrread) ? csrrd : (regwritesrc == 2'b00) ? aluout : 
-	  (regwritesrc == 2'b01) ? loaddata : 
-	  (regwritesrc == 2'b10) ? (pc + 32'd4) : immediate;
+  assign wd3 = (csrread) ? csrrd : (regwritesrc == 2'b00) ? aluout :
+    (regwritesrc == 2'b01) ? loaddata :
+    (regwritesrc == 2'b10) ? (pc + 32'd4) : immediate;
 
 endmodule

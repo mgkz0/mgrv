@@ -21,7 +21,7 @@ module pcnextgen (
 
   adder nextplus4 (
       .a(pc),
-      .b(32'b100),
+      .b(32'd4),
       .y(pcplus4)
   );
   adder nextpcbranch (
@@ -34,7 +34,7 @@ module pcnextgen (
 
   assign is_jalr = (regwrite & alusrc & jump);
 
-  always @(*) begin
+  always_comb begin
     if (trap) begin
       pcnext = pcnexttrap;
     end else if (is_jalr) begin

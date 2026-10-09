@@ -5,33 +5,34 @@ module load_aligner (
 
     output reg [31:0] aligned
 );
-
   wire [15:0] hd;
   wire [ 7:0] bd;
 
-  localparam LW  = 3'b001;
-  localparam LH  = 3'b010;
-  localparam LHU = 3'b011;
-  localparam LB  = 3'b100;
-  localparam LBU = 3'b101;
+  typedef enum logic [2:0] {
+    LW  = 3'b001,
+    LH  = 3'b010,
+    LHU = 3'b011,
+    LB  = 3'b100,
+    LBU = 3'b101
+  } loadcode_t;
 
   mux2 #(16) lhmux (
-      rd[15:0],
-      rd[31:16],
-      offset[1],
-      hd
+      .a(rd[15:0]),
+      .b(rd[31:16]),
+      .s(offset[1]),
+      .y(hd)
   );
 
   mux4 #(8) lbmux (
-      rd[7:0],
-      rd[15:8],
-      rd[23:16],
-      rd[31:24],
-      offset,
-      bd
+      .a(rd[7:0]),
+      .b(rd[15:8]),
+      .c(rd[23:16]),
+      .d(rd[31:24]),
+      .s(offset),
+      .y(bd)
   );
 
-  always @(*) begin
+  always_comb begin
     case (loadcode)
       LW: aligned = rd;
       LH: aligned = {{16{hd[15]}}, hd};
@@ -41,5 +42,4 @@ module load_aligner (
       default: aligned = 32'b0;
     endcase
   end
-
 endmodule

@@ -1,4 +1,6 @@
-module dataram32 (
+module dataram32 #(
+    parameter int ADDR_WIDTH = 18
+) (
     input clk,
     input we,
     input [ADDR_WIDTH-1:0] a,
@@ -6,8 +8,7 @@ module dataram32 (
     input [31:0] wd,
     output [31:0] rd
 );
-  parameter ADDR_WIDTH = 18;
-  reg [31:0] mem[0:(1<<ADDR_WIDTH)-1];
+  logic [31:0] mem[1<<ADDR_WIDTH];
   assign rd = mem[a];
 
   always @(posedge clk) begin

@@ -1,20 +1,19 @@
 module immgen (
-    input [ 2:0] immcode,
+    input [2:0] immcode,
     /* verilator lint_off UNUSEDSIGNAL */
     input [31:0] instr,
     /* verilator lint_on UNUSEDSIGNAL */
-
     output reg [31:0] immediate
 );
+  typedef enum logic [2:0] {
+    I_TYPE = 3'b001,
+    S_TYPE = 3'b010,
+    B_TYPE = 3'b011,
+    J_TYPE = 3'b100,
+    U_TYPE = 3'b101
+  } immcode_t;
 
-  localparam I_TYPE = 3'b001;
-  localparam S_TYPE = 3'b010;
-  localparam B_TYPE = 3'b011;
-  localparam J_TYPE = 3'b100;
-  localparam U_TYPE = 3'b101;
-
-
-  always @(*) begin
+  always_comb begin
     case (immcode)
       I_TYPE:  immediate = {{21{instr[31]}}, instr[30:20]};
       S_TYPE:  immediate = {{21{instr[31]}}, instr[30:25], instr[11:7]};

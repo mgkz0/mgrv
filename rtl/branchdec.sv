@@ -6,7 +6,7 @@ module branchdec (
     output reg take_branch
 );
 
-  always @(*) begin
+  always_comb begin
     take_branch = 1'b0;
     if (branch) begin
       case (func3)

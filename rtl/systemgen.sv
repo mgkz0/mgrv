@@ -13,7 +13,7 @@ module systemgen (
 
   assign uimm = {27'b0, rs1};
 
-  always @(*) begin
+  always_comb begin
     is_ecall = 1'b0;
     is_ebreak = 1'b0;
     is_mret = 1'b0;
@@ -26,7 +26,7 @@ module systemgen (
       4'b0011: csrwd = rd1;
       4'b0100: csrwd = csrrd | rd1;
       4'b0101: csrwd = csrrd & ~rd1;
-      // CSRRWI / CSRRSI / RCSRRCI 
+      // CSRRWI / CSRRSI / RCSRRCI
       4'b0110: csrwd = uimm;
       4'b0111: csrwd = csrrd | uimm;
       4'b1000: csrwd = csrrd & ~uimm;

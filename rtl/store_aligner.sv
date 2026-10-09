@@ -11,42 +11,44 @@ module store_aligner (
   wire [31:0] hd, bd;
 
   mux2 #(4) shmux (
-      4'b0011,
-      4'b1100,
-      offset[1],
-      wstrb_h
+      .a(4'b0011),
+      .b(4'b1100),
+      .s(offset[1]),
+      .y(wstrb_h)
   );
 
   mux4 #(4) sbmux (
-      4'b0001,
-      4'b0010,
-      4'b0100,
-      4'b1000,
-      offset,
-      wstrb_b
+      .a(4'b0001),
+      .b(4'b0010),
+      .c(4'b0100),
+      .d(4'b1000),
+      .s(offset),
+      .y(wstrb_b)
   );
 
   mux2 #(32) shdmux (
-      {16'b0, wd[15:0]},
-      {wd[15:0], 16'b0},
-      offset[1],
-      hd
+      .a({16'b0, wd[15:0]}),
+      .b({wd[15:0], 16'b0}),
+      .s(offset[1]),
+      .y(hd)
   );
 
   mux4 #(32) sbdmux (
-      {24'b0, wd[7:0]},
-      {16'b0, wd[7:0], 8'b0},
-      {8'b0, wd[7:0], 16'b0},
-      {wd[7:0], 24'b0},
-      offset,
-      bd
+      .a({24'b0, wd[7:0]}),
+      .b({16'b0, wd[7:0], 8'b0}),
+      .c({8'b0, wd[7:0], 16'b0}),
+      .d({wd[7:0], 24'b0}),
+      .s(offset),
+      .y(bd)
   );
 
-  localparam SB = 3'b000;
-  localparam SH = 3'b001;
-  localparam SW = 3'b010;
+  typedef enum logic [2:0] {
+    SB = 3'b000,
+    SH = 3'b001,
+    SW = 3'b010
+  } storecode_t;
 
-  always @(*) begin
+  always_comb begin
     case (storecode)
       SW: begin
         aligned = wd;
@@ -66,5 +68,4 @@ module store_aligner (
       end
     endcase
   end
-
 endmodule

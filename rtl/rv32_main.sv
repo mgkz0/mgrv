@@ -1,5 +1,5 @@
 module rv32_main #(
-    parameter PC_RESET_VALUE = 32'h8000_0000
+    parameter logic [31:0] PC_RESET_VALUE = 32'h8000_0000
 ) (
     input wire clk,
     input rst,
