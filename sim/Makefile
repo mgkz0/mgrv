@@ -8,12 +8,14 @@ TOP = top
 # Build
 all:
 	@verilator --cc --exe --build --trace --timing --timescale 1ns/1ps -Wall -j 0 \
+		--top-module top \
 		-Mdir obj_dir \
 		-I../rtl \
-		../rtl/top.v \
-		../rtl/rv32_main.v \
-		../rtl/ram.v \
-		../rtl/dataram32.v \
+		../rtl/pkg/cpu_pkg.sv \
+		../rtl/top.sv \
+		../rtl/rv32_main.sv \
+		../rtl/ram.sv \
+		../rtl/dataram32.sv \
 		tb_top.cpp \
 		elfloader.cpp
 
